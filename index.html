@@ -4,750 +4,505 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Time Travel Adventure! 過去與現在的時光冒險</title>
+    
+    <!-- TailWind CSS for beautiful utility styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Playful typography Google Fonts for kids and presentation aesthetics -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Friendly and playful Google Fonts perfect for children -->
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&family=Noto+Sans+TC:wght@400;700&family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+    <script>
+        // Guard configuration to prevent crashes if CDN is delayed or blocked in sandbox
+        if (typeof tailwind !== 'undefined') {
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        fontFamily: {
+                            sans: ['Fredoka', 'Noto Sans TC', 'sans-serif'],
+                            display: ['Comfortaa', 'Noto Sans TC', 'sans-serif'],
+                        }
+                    }
+                }
+            };
+        } else {
+            // Listen for late load event if CDN is running asynchronously
+            document.addEventListener('DOMContentLoaded', () => {
+                if (typeof tailwind !== 'undefined') {
+                    tailwind.config = {
+                        theme: {
+                            extend: {
+                                fontFamily: {
+                                    sans: ['Fredoka', 'Noto Sans TC', 'sans-serif'],
+                                    display: ['Comfortaa', 'Noto Sans TC', 'sans-serif'],
+                                }
+                            }
+                        }
+                    };
+                }
+            });
+        }
+    </script>
     <style>
-        /* 1. GENERAL PRESENTATION SETUP */
-        * {
-            box-sizing: border-box;
-        }
-
+        /* Fallback rules to maintain playful fonts if tailwind loads asynchronously */
         body {
-            background-color: #1e1e2e;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            margin: 0;
-            min-height: 100vh;
-            overflow: hidden;
             font-family: 'Fredoka', 'Noto Sans TC', sans-serif;
         }
-
-        /* 1.1 Root Slide Container - Strictly Fixed Presentation Size */
-        .slide-container {
-            position: relative;
-            width: 1280px;
-            height: 720px;
-            background-color: #ffffff;
-            border-radius: 24px;
-            box-shadow: 0 25px 55px rgba(0, 0, 0, 0.35);
-            display: none; /* Toggled via JavaScript for single-slide view */
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 50px 60px;
-            overflow: hidden;
-        }
-
-        /* Show the active slide */
-        .slide-container.active {
-            display: flex;
-        }
-
-        /* Abstract Pastel Background Shapes */
-        .slide-container::before {
-            content: '';
-            position: absolute;
-            top: -10%;
-            right: -10%;
-            width: 350px;
-            height: 350px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(253,213,189,0.4) 0%, rgba(255,255,255,0) 70%);
-            z-index: 0;
-        }
-
-        .slide-container::after {
-            content: '';
-            position: absolute;
-            bottom: -15%;
-            left: -10%;
-            width: 400px;
-            height: 400px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(220,253,139,0.3) 0%, rgba(255,255,255,0) 70%);
-            z-index: 0;
-        }
-
-        .slide-container > * {
-            position: relative;
-            z-index: 1;
-        }
-
-        /* 2. TYPOGRAPHY SYSTEM */
-        .slide-container h1 {
+        .font-display {
             font-family: 'Comfortaa', 'Noto Sans TC', sans-serif;
-            font-size: 64px;
-            font-weight: 700;
-            color: #1e293b;
-            margin: 0 0 10px 0;
-            line-height: 1.2;
         }
-
-        .slide-container .slide-title {
-            font-family: 'Comfortaa', 'Noto Sans TC', sans-serif;
-            font-size: 38px;
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 25px;
-            text-align: left;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            gap: 15px;
+        
+        /* Smooth, bouncy animations for interactive feel */
+        .pop-hover {
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-
-        .slide-container .slide-title i {
-            color: #bc84ee;
+        .pop-hover:hover {
+            transform: scale(1.03);
         }
-
-        .slide-container h3 {
-            font-family: 'Fredoka', 'Noto Sans TC', sans-serif;
-            font-size: 26px;
-            font-weight: 600;
-            color: #334155;
-            margin: 0 0 10px 0;
-        }
-
-        .slide-container p, 
-        .slide-container li {
-            font-family: 'Fredoka', 'Noto Sans TC', sans-serif;
-            font-size: 18px;
-            line-height: 1.5;
-            color: #475569;
-        }
-
-        /* Bilingual helper formatting */
-        .translation-sub {
-            display: block;
-            font-size: 18px;
-            color: #8b5cf6;
-            font-weight: 500;
-            margin-top: 2px;
-        }
-
-        .translation-inline {
-            color: #8b5cf6;
-            font-size: 0.9em;
-            font-weight: 500;
-        }
-
-        /* 3. LAYOUT DEFINITIONS */
-        .content-area {
-            align-items: center;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-            justify-content: center;
-            width: 100%;
-        }
-
-        /* Columns & Tiles */
-        .two-column {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            width: 100%;
-            align-items: center;
-        }
-
-        .tiled-content {
-            display: flex;
-            gap: 30px;
-            justify-content: center;
-            width: 100%;
-        }
-
-        .tile {
-            background-color: #f8fafc;
-            border: 3px dashed #e2e8f0;
-            border-radius: 24px;
-            flex: 1;
-            padding: 30px 24px;
-            text-align: center;
-            transition: transform 0.2s;
-        }
-
-        .tile .icon {
-            font-size: 44px;
-            margin-bottom: 15px;
-            display: inline-block;
-        }
-
-        /* Distinctive Pastel Colorings for Kids */
-        .bg-lime { background-color: #f7fee7; border-color: #dcfd8b; }
-        .bg-peach { background-color: #fff7ed; border-color: #fdd5bd; }
-        .bg-lavender { background-color: #faf5ff; border-color: #e9d5ff; }
-        .bg-sky { background-color: #f0f9ff; border-color: #bae6fd; }
-
-        /* Custom Bullet List Design */
-        .bullet-list {
-            width: 100%;
-        }
-
-        .bullet-list ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .bullet-list li {
-            position: relative;
-            padding-left: 45px;
-            margin-bottom: 15px;
-            font-size: 20px;
-        }
-
-        .bullet-list i {
-            position: absolute;
-            left: 5px;
-            top: 4px;
-            font-size: 24px;
-        }
-
-        /* Kid-Friendly Images with Rounded Corners & Borders */
-        .image-wrapper {
-            border-radius: 24px;
-            border: 6px solid #ffffff;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-            height: 330px;
-            overflow: hidden;
-            width: 100%;
-        }
-
-        .image-wrapper img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* Video Simulator Screen Styles */
-        .video-box {
-            background-color: #1e293b;
-            border-radius: 32px;
-            border: 12px solid #475569;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-            display: flex;
-            flex-direction: column;
-            height: 400px;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            width: 100%;
-            overflow: hidden;
-            cursor: pointer;
-        }
-
-        .video-overlay {
-            position: absolute;
-            background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.6));
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: background 0.3s ease;
-        }
-
-        .video-overlay:hover {
-            background: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.5));
-        }
-
-        .video-play-btn {
-            background-color: #ff823a;
-            border-radius: 50%;
-            box-shadow: 0 0 30px rgba(255, 130, 58, 0.6);
-            color: white;
-            display: grid;
-            font-size: 42px;
-            height: 100px;
-            place-items: center;
-            width: 100px;
-            padding-left: 8px; /* Alignment fix for play icon triangle */
-            border: 6px solid white;
-            transition: transform 0.2s ease, background-color 0.2s ease;
-        }
-
-        .video-box:hover .video-play-btn {
-            transform: scale(1.1);
-            background-color: #ff9d63;
-        }
-
-        .video-tag {
-            background-color: #10b981;
-            border-radius: 8px;
-            color: white;
-            font-size: 14px;
-            font-weight: bold;
-            letter-spacing: 1px;
-            padding: 6px 12px;
-            position: absolute;
-            top: 20px;
-            left: 20px;
-        }
-
-        .progress-bar-sim {
-            background-color: rgba(255, 255, 255, 0.3);
-            bottom: 20px;
-            height: 8px;
-            left: 5%;
-            position: absolute;
-            width: 90%;
-            border-radius: 4px;
-        }
-
-        .progress-bar-fill {
-            background-color: #ff823a;
-            height: 100%;
-            width: 0%; /* Animates on click */
-            border-radius: 4px;
-            transition: width 3s linear;
-        }
-
-        /* Interactive Quiz Table with Interactive Feedback */
-        .table-layout {
-            width: 100%;
-        }
-
-        .table-layout table {
-            border-collapse: separate;
-            border-spacing: 0 10px;
-            width: 100%;
-        }
-
-        .table-layout th {
-            font-family: 'Comfortaa', sans-serif;
-            font-size: 22px;
-            font-weight: bold;
-            color: #1e293b;
-            padding: 15px;
-            text-align: center;
-            border: none;
-        }
-
-        .table-layout td {
-            padding: 18px 25px;
-            font-size: 20px;
-            background-color: #f8fafc;
-            border-top: 2px solid #e2e8f0;
-            border-bottom: 2px solid #e2e8f0;
-            transition: all 0.3s ease;
-        }
-
-        .table-layout td:first-child {
-            border-left: 2px solid #e2e8f0;
-            border-top-left-radius: 16px;
-            border-bottom-left-radius: 16px;
-            font-weight: bold;
-            color: #1e293b;
-            text-align: left;
-        }
-
-        .table-layout td:last-child {
-            border-right: 2px solid #e2e8f0;
-            border-top-right-radius: 16px;
-            border-bottom-right-radius: 16px;
-        }
-
-        /* Playful interactive quiz buttons */
-        .quiz-btn {
-            background-color: #f1f5f9;
-            border: 2px solid #cbd5e1;
-            border-radius: 12px;
-            padding: 8px 16px;
-            font-size: 16px;
-            font-weight: bold;
-            color: #475569;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            outline: none;
-        }
-
-        .quiz-btn:hover {
-            background-color: #e2e8f0;
-            transform: scale(1.05);
-        }
-
-        .quiz-btn.correct {
-            background-color: #dcfce7;
-            border-color: #22c55e;
-            color: #15803d;
-        }
-
-        /* 4. NAVIGATION CONTROLS (For presentation switching on GitHub Pages) */
-        .nav-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 1280px;
-            margin-top: 20px;
-            padding: 0 20px;
-            z-index: 10;
-        }
-
-        .nav-btn {
-            background-color: #3b82f6;
-            color: white;
-            border: none;
-            border-radius: 50px;
-            padding: 12px 28px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: all 0.2s ease;
-        }
-
-        .nav-btn:hover {
-            background-color: #2563eb;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
-        }
-
-        .nav-btn:disabled {
-            background-color: #4b5563;
-            box-shadow: none;
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
-
-        .slide-counter {
-            color: #94a3b8;
-            font-size: 18px;
-            font-weight: bold;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 8px 20px;
-            border-radius: 30px;
-        }
-
-        .keyboard-hint {
-            color: #64748b;
-            font-size: 14px;
-            text-align: center;
-            margin-top: 10px;
+        .slide-transition {
+            transition: opacity 0.4s ease, transform 0.4s ease;
         }
     </style>
 </head>
-<body>
+<body class="bg-[#1e1e2e] text-[#475569] min-h-screen flex flex-col justify-between p-4 md:p-8 select-none">
 
-    <!-- Slide 1: Title_Slide (Highly Engaging and Colorful for Kids) -->
-    <div class="slide-container active" id="slide1" style="background-color: #eefbe7;">
-        <div class="content-area" style="text-align: center;">
-            <div style="background-color: #ff823a; color: white; display: inline-block; padding: 10px 25px; border-radius: 50px; font-weight: bold; font-size: 20px; margin-bottom: 25px;">
-                <i class="fa-solid fa-rocket"></i> Time Travel! <span class="translation-inline" style="color: #fff;">時光旅行！</span>
-            </div>
-            <h1 style="font-size: 68px; color: #1e293b; margin-bottom: 10px;">Past vs. Present</h1>
-            <h2 style="font-family: 'Noto Sans TC', sans-serif; font-size: 46px; color: #8b5cf6; margin: 0 0 20px 0; font-weight: 700;">過去與現在：生活大轉變</h2>
-            <p style="font-size: 24px; max-width: 800px; margin: 20px auto 0; color: #475569;">
-                Let's find out how everyday toys, schools, and journeys look different today!
-                <span class="translation-sub">讓我們一起探索，你身邊的玩具、學校還有交通工具在以前和現在有什麼不一樣！</span>
-            </p>
-        </div>
-    </div>
+    <!-- Presentation Container: Fluid and responsive, centered on screen -->
+    <div class="max-w-5xl w-full mx-auto bg-white rounded-3xl shadow-2xl flex flex-col justify-between overflow-hidden relative min-h-[550px] md:min-h-[650px] my-auto">
+        
+        <!-- Absolute Background Accents -->
+        <div class="absolute top-[-10%] right-[-10%] w-[300px] h-[300px] rounded-full bg-orange-100 opacity-40 blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-[-10%] left-[-10%] w-[350px] h-[350px] rounded-full bg-lime-100 opacity-40 blur-3xl pointer-events-none"></div>
 
-    <!-- Slide 2: Tiled_Images (Compare Toys and Games with Improved Images) -->
-    <div class="slide-container" id="slide2" style="background-color: #faf5ff;">
-        <h2 class="slide-title">
-            <i class="fa-solid fa-gamepad"></i> Toys & Playtime <span class="translation-inline">/ 玩具與遊戲時間</span>
-        </h2>
-        <div class="content-area">
-            <div class="tiled-content" style="width: 100%;">
-                <!-- Past Tile -->
-                <div class="tile bg-peach" style="flex: 1;">
-                    <div class="image-wrapper" style="height: 220px; margin-bottom: 15px;">
-                        <!-- Improved Image: High quality colorful vintage wooden toys -->
-                        <img alt="Cute colorful vintage wooden toys" src="http://googleusercontent.com/image_collection/image_retrieval/14306373221351736833_0">
-                    </div>
-                    <h3>The Past <span class="translation-inline">/ 以前</span></h3>
-                    <p style="margin: 0; font-size: 16px;">
-                        Kids played with <strong>simple wooden blocks</strong>, hand-sewn dolls, and spinning tops. They used active imaginations!
-                        <span class="translation-sub" style="font-size: 15px;">以前的小朋友玩木頭積木、手縫玩偶和陀螺。他們用滿滿的想像力玩耍！</span>
-                    </p>
+        <!-- STAGE / CONTENT AREA -->
+        <div class="flex-grow flex items-center justify-center p-6 md:p-10 z-10">
+
+            <!-- ================= SLIDE 1: WELCOME SCREEN ================= -->
+            <div id="slide1" class="slide-container slide-transition w-full flex flex-col items-center text-center space-y-6">
+                <div class="bg-orange-500 text-white px-6 py-2 rounded-full font-bold text-sm md:text-lg shadow-lg shadow-orange-500/30 animate-bounce">
+                    <i class="fa-solid fa-rocket mr-2"></i> Time Travel! <span class="text-xs md:text-sm font-normal text-orange-100 block md:inline md:ml-1">時光旅行！</span>
                 </div>
-                
-                <!-- Present Tile -->
-                <div class="tile bg-lime" style="flex: 1;">
-                    <div class="image-wrapper" style="height: 220px; margin-bottom: 15px;">
-                        <!-- Improved Image: Colorful illustration of kids playing modern games on tablets -->
-                        <img alt="Happy kid playing video game on tablet" src="http://googleusercontent.com/image_collection/image_retrieval/9493082439458632899_0">
-                    </div>
-                    <h3>The Present <span class="translation-inline">/ 現在</span></h3>
-                    <p style="margin: 0; font-size: 16px;">
-                        Now, we have <strong>video games and tablets</strong>. You can play colorful pixel worlds and solve puzzles with a single tap!
-                        <span class="translation-sub" style="font-size: 15px;">現在我們有電子遊戲和平板電腦。點一下就能在彩色的世界裡玩遊戲！</span>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Slide 3: Two_Column_Tiled_Text (Classrooms & Learning with Improved Images) -->
-    <div class="slide-container" id="slide3" style="background-color: #f0f9ff;">
-        <h2 class="slide-title">
-            <i class="fa-solid fa-school"></i> Going to School <span class="translation-inline">/ 學校課堂與學習</span>
-        </h2>
-        <div class="content-area">
-            <div class="two-column">
-                <!-- Left Side: Old school info with illustration -->
-                <div class="tile bg-peach" style="padding: 25px;">
-                    <div class="image-wrapper" style="height: 180px; margin-bottom: 15px;">
-                        <!-- Improved Image: Warm historical classroom sketch/watercolor illustration -->
-                        <img alt="Old vintage school classroom kids illustration" src="http://googleusercontent.com/image_collection/image_retrieval/5700284298955687934_0">
-                    </div>
-                    <h3>Classic Classrooms <span class="translation-inline">/ 以前的教室</span></h3>
-                    <p style="font-size: 16px; margin: 0;">
-                        Students had <strong>wooden benches</strong>, chalkboards, and heavy paper books. Writing was done with real ink!
-                        <span class="translation-sub" style="font-size: 15px;">以前的小朋友坐木頭長椅，看黑板。要用真正的墨水在紙本上寫字！</span>
-                    </p>
-                </div>
-
-                <!-- Right Side: Modern classroom info with illustration -->
-                <div class="tile bg-sky" style="padding: 25px;">
-                    <div class="image-wrapper" style="height: 180px; margin-bottom: 15px;">
-                        <!-- Improved Image: High-quality modern smart classroom illustration with interactive boards -->
-                        <img alt="Modern smart classroom kids cartoon illustration" src="http://googleusercontent.com/image_collection/image_retrieval/8041693533445218407_0">
-                    </div>
-                    <h3>Smart Classrooms <span class="translation-inline">/ 現在的教室</span></h3>
-                    <p style="font-size: 16px; margin: 0;">
-                        Today, we learn with <strong>interactive smart boards</strong>, colorful computers, and playful learning apps!
-                        <span class="translation-sub" style="font-size: 15px;">現在，我們用觸控電子白板、電腦和好玩的學習APP來上課！</span>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Slide 4: Image_Right_Text_Left (Getting to School with Improved Bus Image) -->
-    <div class="slide-container" id="slide4" style="background-color: #fff7ed;">
-        <h2 class="slide-title">
-            <i class="fa-solid fa-bus"></i> Traveling to School <span class="translation-inline">/ 我們怎麼去上學？</span>
-        </h2>
-        <div class="content-area">
-            <div class="two-column">
-                <div>
-                    <div class="bullet-list">
-                        <ul>
-                            <li>
-                                <i class="fa-solid fa-person-walking" style="color: #ff823a;"></i>
-                                <strong>Long Walks of the Past <span class="translation-inline">/ 以前：走很久的路</span></strong>
-                                <p style="font-size: 16px; margin-top: 5px;">
-                                    Years ago, kids walked for miles across fields, or rode in slow horse-drawn carriages to get to class!
-                                    <span class="translation-sub" style="font-size: 15px;">以前的小朋友要穿過原野走好幾公里的路，或者坐慢吞吞的馬車去學校！</span>
-                                </p>
-                            </li>
-                            <li style="margin-top: 25px;">
-                                <i class="fa-solid fa-bus-simple" style="color: #10b981;"></i>
-                                <strong>Comfortable Modern Bus <span class="translation-inline">/ 現在：舒適的校車</span></strong>
-                                <p style="font-size: 16px; margin-top: 5px;">
-                                    Today, safe, bright yellow buses and cars whisk us directly to the school doors in warmth and comfort!
-                                    <span class="translation-sub" style="font-size: 15px;">現在，明亮又溫暖的安全校車或汽車，可以直接把我們舒舒服服地送到校門口！</span>
-                                </p>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div>
-                    <div class="image-wrapper" style="height: 380px;">
-                        <!-- Improved Image: Stunning bright yellow modern school bus cartoon -->
-                        <img alt="Bright yellow modern school bus cartoon illustration" style="object-fit: contain;" src="http://googleusercontent.com/image_collection/image_retrieval/9597631980000329284_0">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Slide 5: Tiled_Text_With_Icons (Stay in Touch / Communication) -->
-    <div class="slide-container" id="slide5" style="background-color: #faf5ff;">
-        <h2 class="slide-title">
-            <i class="fa-solid fa-comments"></i> Talking to Friends <span class="translation-inline">/ 如何跟好朋友聯絡？</span>
-        </h2>
-        <div class="content-area">
-            <div class="tiled-content" style="width: 100%;">
-                <!-- Step 1: Long Ago -->
-                <div class="tile bg-peach">
-                    <div class="icon" style="color: #ff823a;"><i class="fa-solid fa-envelope-open-text"></i></div>
-                    <h3>1. Paper Letters <span class="translation-inline">/ 手寫信件</span></h3>
-                    <p style="font-size: 16px; margin: 0;">
-                        People wrote letters by hand! It took days or weeks for a mail carrier to deliver them.
-                        <span class="translation-sub" style="font-size: 15px;">以前要一筆一劃寫信，郵差叔叔要花好幾天甚至好幾個星期才能送到！</span>
-                    </p>
-                </div>
-
-                <!-- Step 2: Then -->
-                <div class="tile bg-sky">
-                    <div class="icon" style="color: #bc84ee;"><i class="fa-solid fa-phone-rotary"></i></div>
-                    <h3>2. Rotary Phones <span class="translation-inline">/ 撥號電話</span></h3>
-                    <p style="font-size: 16px; margin: 0;">
-                        Later, houses shared big dial-up phones connected by wires. No texting, only calling!
-                        <span class="translation-sub" style="font-size: 15px;">後來，家裡有了有線大電話，要用手指轉圈圈撥號。那時不能傳訊息，只能講電話喔！</span>
-                    </p>
-                </div>
-
-                <!-- Step 3: Now -->
-                <div class="tile bg-lime">
-                    <div class="icon" style="color: #10b981;"><i class="fa-solid fa-video"></i></div>
-                    <h3>3. Video Calls <span class="translation-inline">/ 即時視訊</span></h3>
-                    <p style="font-size: 16px; margin: 0;">
-                        Today, we can video chat instantly, send emojis, and talk face-to-face from anywhere on Earth!
-                        <span class="translation-sub" style="font-size: 15px;">現在我們可以隨時隨地用平板或手機面對面視訊，還能傳可愛的貼圖！</span>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Slide 6: Simulated Video Player Slide ("Animated Video Screen" with Improved Time Travel Background) -->
-    <div class="slide-container" id="slide6" style="background-color: #1e293b; color: white;">
-        <h2 class="slide-title" style="color: white;">
-            <i class="fa-solid fa-circle-play" style="color: #ff823a;"></i> Time Traveler Mini-Movie <span class="translation-inline" style="color: #a7f3d0;">/ 點擊播放：時光小短片</span>
-        </h2>
-        <div class="content-area">
-            <!-- Simulated interactive learning video screen -->
-            <div class="video-box" onclick="simulateVideoPlay()" style="background-image: linear-gradient(rgba(30, 41, 59, 0.7), rgba(30, 41, 59, 0.9)), url('http://googleusercontent.com/image_collection/image_retrieval/9506016952555580420_0'); background-size: cover; background-position: center;">
-                <div class="video-overlay">
-                    <div class="video-tag"><i class="fa-solid fa-film"></i> ANIMATED LESSON (3 MIN)</div>
-                    <div class="video-play-btn" id="playBtn">
-                        <i class="fa-solid fa-play" id="playIcon"></i>
-                    </div>
-                    <h3 style="color: white; font-size: 28px; margin-top: 25px; margin-bottom: 5px; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">
-                        "The Great Time Shift!" <span class="translation-inline" style="color: #ff823a;">/ 歷史大探索動畫版</span>
-                    </h3>
-                    <p style="color: #cbd5e1; font-size: 18px; text-shadow: 0 1px 5px rgba(0,0,0,0.5);" id="videoStatus">
-                        Click the play button to start the time-travel magic!
-                        <span class="translation-sub" style="color: #a7f3d0; margin-top: 3px; font-size: 16px;">點選播放按鈕，開啟時光旅行大魔法！</span>
-                    </p>
-                    <div class="progress-bar-sim">
-                        <div class="progress-bar-fill" id="progressFill"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Slide 7: Interactive Table/Quiz (Fun Quiz Game with click responses) -->
-    <div class="slide-container" id="slide7" style="background-color: #eefbe7;">
-        <h2 class="slide-title">
-            <i class="fa-solid fa-circle-question"></i> Time Traveler Quiz! <span class="translation-inline">/ 時光旅行小挑戰</span>
-        </h2>
-        <div class="content-area">
-            <p style="font-size: 20px; text-align: center; margin-bottom: 20px; color: #475569;">
-                Can you guess which item belongs where? Click to check your answer!
-                <span class="translation-sub" style="font-size: 18px;">猜一猜！這些神奇寶物應該屬於哪一個時代呢？點選按鈕來揭曉答案！</span>
-            </p>
-            <div class="table-layout">
-                <table>
-                    <thead>
-                        <tr>
-                            <th style="background-color: #ff823a; color: white; border-radius: 12px 0 0 12px; font-size: 20px;">Item Name / 物品名稱</th>
-                            <th style="background-color: #bc84ee; color: white; font-size: 20px;">Choose Era / 選擇年代</th>
-                            <th style="background-color: #10b981; color: white; border-radius: 0 12px 12px 0; font-size: 20px;">What did it do? / 它的作用</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>📝 Paper Letter <span class="translation-inline">(手寫信)</span></td>
-                            <td style="text-align: center;">
-                                <button class="quiz-btn" onclick="checkAnswer(this, 'past')">The Past (過去)</button>
-                                <button class="quiz-btn" onclick="checkAnswer(this, 'present')">The Present (現在)</button>
-                            </td>
-                            <td>Shared stories with ink & paper <span class="translation-inline">(用信紙分享故事)</span></td>
-                        </tr>
-                        <tr>
-                            <td>📱 iPad & Tablet <span class="translation-inline">(平板電腦)</span></td>
-                            <td style="text-align: center;">
-                                <button class="quiz-btn" onclick="checkAnswer(this, 'past')">The Past (過去)</button>
-                                <button class="quiz-btn" onclick="checkAnswer(this, 'present')">The Present (現在)</button>
-                            </td>
-                            <td>Plays games & watches videos <span class="translation-inline">(玩遊戲與看影片)</span></td>
-                        </tr>
-                        <tr>
-                            <td>🐴 Horse Carriage <span class="translation-inline">(載客馬車)</span></td>
-                            <td style="text-align: center;">
-                                <button class="quiz-btn" onclick="checkAnswer(this, 'past')">The Past (過去)</button>
-                                <button class="quiz-btn" onclick="checkAnswer(this, 'present')">The Present (現在)</button>
-                            </td>
-                            <td>Traveled slowly on muddy roads <span class="translation-inline">(在泥巴路上慢速旅行)</span></td>
-                        </tr>
-                        <tr>
-                            <td>🚌 Yellow School Bus <span class="translation-inline">(黃色校車)</span></td>
-                            <td style="text-align: center;">
-                                <button class="quiz-btn" onclick="checkAnswer(this, 'past')">The Past (過去)</button>
-                                <button class="quiz-btn" onclick="checkAnswer(this, 'present')">The Present (現在)</button>
-                            </td>
-                            <td>Safe ride to your classroom <span class="translation-inline">(舒舒服服安全載你上學)</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- Slide 8: Q&A (Cute Closing and Classroom Conversation Starter) -->
-    <div class="slide-container" id="slide8" style="background-color: #fff7ed; text-align: center;">
-        <div class="content-area">
-            <div style="font-size: 80px; color: #ff823a; margin-bottom: 20px;">
-                <i class="fa-solid fa-comments"></i>
-            </div>
-            <h1 style="font-size: 58px; margin-bottom: 10px;">Any Questions?</h1>
-            <h2 style="font-family: 'Noto Sans TC', sans-serif; font-size: 38px; color: #8b5cf6; margin: 0 0 30px 0;">大家有什麼問題嗎？</h2>
-            <p style="font-size: 24px; max-width: 800px; color: #475569; line-height: 1.6;">
-                What was your favorite Past vs. Present discovery today? Let's discuss!
-                <span class="translation-sub" style="font-size: 22px;">今天，哪一個「過去與現在」的大轉變最讓你驚奇呢？我們一起來聊聊吧！</span>
-            </p>
-            <div style="margin-top: 40px; padding: 15px 30px; background-color: white; border-radius: 50px; border: 3px dashed #fdd5bd; display: inline-block;">
-                <p style="margin: 0; font-size: 20px; font-weight: bold; color: #1e293b;">
-                    🏫 Let's Share our Thoughts! <span class="translation-inline">/ 課堂分享時間</span>
+                <h1 class="font-display font-bold text-4xl md:text-6xl text-[#1e293b] leading-tight">
+                    Past vs. Present
+                    <span class="block text-2xl md:text-4xl text-purple-600 font-bold mt-2">過去與現在：生活大轉變</span>
+                </h1>
+                <p class="text-base md:text-xl max-w-2xl text-slate-600 leading-relaxed">
+                    Let's find out how everyday toys, schools, and journeys look different today!
+                    <span class="block text-purple-500 text-sm md:text-base font-semibold mt-2">
+                        讓我們一起探索，你身邊的玩具、學校還有交通工具在以前和現在有什麼不一樣！
+                    </span>
                 </p>
+                <!-- Welcome SVG Graphics -->
+                <div class="w-full max-w-[280px] md:max-w-[360px] h-auto py-2">
+                    <svg viewBox="0 0 400 150" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full">
+                        <!-- Rainbow path -->
+                        <path d="M 50 130 Q 200 10 350 130" stroke="#fecdd3" stroke-width="12" fill="none" stroke-linecap="round"/>
+                        <path d="M 50 130 Q 200 10 350 130" stroke="#ffedd5" stroke-width="6" fill="none" stroke-linecap="round"/>
+                        <!-- Clock on Left (Past) -->
+                        <circle cx="80" cy="110" r="25" fill="#bae6fd" stroke="#0284c7" stroke-width="4"/>
+                        <path d="M 80 110 L 80 95 M 80 110 L 93 110" stroke="#0284c7" stroke-width="3" stroke-linecap="round"/>
+                        <!-- Arrow -->
+                        <path d="M 170 60 Q 200 45 230 60" stroke="#8b5cf6" stroke-width="4" fill="none" stroke-linecap="round"/>
+                        <path d="M 225 52 L 232 60 L 222 65" stroke="#8b5cf6" stroke-width="4" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+                        <!-- Smartwatch on Right (Present) -->
+                        <rect x="295" y="85" width="50" height="50" rx="12" fill="#dcfce7" stroke="#22c55e" stroke-width="4"/>
+                        <circle cx="320" cy="110" r="16" fill="#4ade80"/>
+                        <path d="M 320 102 L 320 110 L 326 114" stroke="white" stroke-width="3" stroke-linecap="round"/>
+                    </svg>
+                </div>
             </div>
+
+            <!-- ================= SLIDE 2: TOYS & PLAYTIME ================= -->
+            <div id="slide2" class="slide-container slide-transition w-full hidden flex-col space-y-4">
+                <h2 class="font-display font-bold text-2xl md:text-4xl text-[#1e293b] flex items-center gap-3">
+                    <i class="fa-solid fa-gamepad text-purple-500"></i> Toys & Playtime <span class="text-base md:text-xl text-purple-600 font-semibold">/ 玩具與遊戲時間</span>
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full pt-2">
+                    <!-- Past Card -->
+                    <div class="bg-orange-50/70 border-2 border-dashed border-orange-200 rounded-2xl p-4 md:p-6 pop-hover text-center flex flex-col justify-between">
+                        <div>
+                            <span class="text-4xl md:text-5xl block mb-2">🪵</span>
+                            <h3 class="font-bold text-xl md:text-2xl text-orange-700">The Past <span class="text-sm font-semibold block md:inline text-orange-600">/ 以前</span></h3>
+                            <p class="text-sm md:text-base text-slate-600 mt-2">
+                                Kids played with <strong>simple wooden blocks</strong>, hand-sewn dolls, and spinning tops. They used active imaginations!
+                            </p>
+                        </div>
+                        <span class="text-purple-600 text-xs md:text-sm font-semibold block mt-4 border-t border-orange-100 pt-2">
+                            以前的小朋友玩木頭積木、手縫玩偶和陀螺。他們用滿滿的想像力玩耍！
+                        </span>
+                    </div>
+
+                    <!-- Present Card -->
+                    <div class="bg-lime-50/70 border-2 border-dashed border-lime-200 rounded-2xl p-4 md:p-6 pop-hover text-center flex flex-col justify-between">
+                        <div>
+                            <span class="text-4xl md:text-5xl block mb-2">🎮</span>
+                            <h3 class="font-bold text-xl md:text-2xl text-lime-700">The Present <span class="text-sm font-semibold block md:inline text-lime-600">/ 現在</span></h3>
+                            <p class="text-sm md:text-base text-slate-600 mt-2">
+                                Now, we have <strong>video games and tablets</strong>. You can play colorful digital worlds and solve puzzles with a single tap!
+                            </p>
+                        </div>
+                        <span class="text-purple-600 text-xs md:text-sm font-semibold block mt-4 border-t border-lime-100 pt-2">
+                            現在我們有電子遊戲和平板電腦。點一下就能在彩色的世界裡玩遊戲！
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= SLIDE 3: CLASSROOMS & LEARNING ================= -->
+            <div id="slide3" class="slide-container slide-transition w-full hidden flex-col space-y-4">
+                <h2 class="font-display font-bold text-2xl md:text-4xl text-[#1e293b] flex items-center gap-3">
+                    <i class="fa-solid fa-school text-blue-500"></i> Classrooms <span class="text-base md:text-xl text-purple-600 font-semibold">/ 學校課堂與學習</span>
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full pt-2">
+                    <!-- Classic Classroom -->
+                    <div class="bg-orange-50/70 border-2 border-dashed border-orange-200 rounded-2xl p-4 md:p-6 pop-hover flex flex-col md:flex-row gap-4 items-center">
+                        <div class="text-4xl md:text-5xl shrink-0">📝</div>
+                        <div class="flex-grow">
+                            <h3 class="font-bold text-lg md:text-xl text-orange-700">Classic Classrooms <span class="text-xs md:text-sm font-semibold text-orange-600">/ 以前的教室</span></h3>
+                            <p class="text-xs md:text-sm text-slate-600 mt-1">
+                                Students had <strong>wooden benches</strong>, blackboard slates, and heavy paper books. Writing was done with real ink!
+                            </p>
+                            <span class="text-purple-600 text-xs font-semibold block mt-2">
+                                以前的小朋友坐木頭長椅，看黑板。要用真正的墨水在紙本上寫字！
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Smart Classroom -->
+                    <div class="bg-blue-50/70 border-2 border-dashed border-blue-200 rounded-2xl p-4 md:p-6 pop-hover flex flex-col md:flex-row gap-4 items-center">
+                        <div class="text-4xl md:text-5xl shrink-0">💻</div>
+                        <div class="flex-grow">
+                            <h3 class="font-bold text-lg md:text-xl text-blue-700">Smart Classrooms <span class="text-xs md:text-sm font-semibold text-blue-600">/ 現在的教室</span></h3>
+                            <p class="text-xs md:text-sm text-slate-600 mt-1">
+                                Today, we learn with <strong>interactive smart boards</strong>, colorful computers, and playful learning apps!
+                            </p>
+                            <span class="text-purple-600 text-xs font-semibold block mt-2">
+                                現在，我們用觸控電子白板、電腦和好玩的學習APP來上課！
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= SLIDE 4: TRAVELING TO SCHOOL ================= -->
+            <div id="slide4" class="slide-container slide-transition w-full hidden flex-col space-y-4">
+                <h2 class="font-display font-bold text-2xl md:text-4xl text-[#1e293b] flex items-center gap-3">
+                    <i class="fa-solid fa-bus text-amber-500"></i> Traveling to School <span class="text-base md:text-xl text-purple-600 font-semibold">/ 我們怎麼去上學？</span>
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center w-full">
+                    <div class="space-y-4">
+                        <div class="flex gap-4 items-start">
+                            <div class="bg-orange-100 text-orange-600 p-3 rounded-xl"><i class="fa-solid fa-person-walking text-xl"></i></div>
+                            <div>
+                                <h3 class="font-bold text-md md:text-lg text-slate-800">Long Walks of the Past <span class="text-xs md:text-sm text-purple-500 font-semibold block md:inline">/ 以前：走長長的路</span></h3>
+                                <p class="text-xs md:text-sm text-slate-600 mt-1">
+                                    Years ago, kids walked for miles across fields, or rode in slow horse-drawn carriages to get to class.
+                                </p>
+                                <span class="text-purple-500 text-xs block mt-1 font-semibold">
+                                    以前的小朋友要穿過原野走好幾公里的路，或者坐慢吞吞的馬車去學校！
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-4 items-start">
+                            <div class="bg-emerald-100 text-emerald-600 p-3 rounded-xl"><i class="fa-solid fa-bus-simple text-xl"></i></div>
+                            <div>
+                                <h3 class="font-bold text-md md:text-lg text-slate-800">Comfortable Modern Bus <span class="text-xs md:text-sm text-purple-500 font-semibold block md:inline">/ 現在：舒適的校車</span></h3>
+                                <p class="text-xs md:text-sm text-slate-600 mt-1">
+                                    Today, safe, bright buses and cars whisk us directly to the school doors in warmth and comfort!
+                                </p>
+                                <span class="text-purple-500 text-xs block mt-1 font-semibold">
+                                    現在，明亮又溫暖的安全校車或汽車，可以直接把我們舒舒服服地送到校門口！
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bus Drawing Graphic -->
+                    <div class="bg-amber-50 rounded-2xl p-4 flex justify-center items-center h-44 md:h-64 border-2 border-amber-200 border-dashed">
+                        <svg viewBox="0 0 200 120" class="w-full max-h-full">
+                            <!-- School Bus SVG -->
+                            <rect x="30" y="30" width="130" height="50" rx="10" fill="#f59e0b"/>
+                            <rect x="140" y="45" width="25" height="35" rx="4" fill="#f59e0b"/>
+                            <!-- Windows -->
+                            <rect x="40" y="38" width="20" height="20" rx="2" fill="#bae6fd"/>
+                            <rect x="70" y="38" width="20" height="20" rx="2" fill="#bae6fd"/>
+                            <rect x="100" y="38" width="20" height="20" rx="2" fill="#bae6fd"/>
+                            <rect x="145" y="48" width="15" height="15" rx="2" fill="#334155"/>
+                            <!-- Wheels -->
+                            <circle cx="60" cy="85" r="16" fill="#1e293b" stroke="#94a3b8" stroke-width="3"/>
+                            <circle cx="60" cy="85" r="6" fill="#f8fafc"/>
+                            <circle cx="130" cy="85" r="16" fill="#1e293b" stroke="#94a3b8" stroke-width="3"/>
+                            <circle cx="130" cy="85" r="6" fill="#f8fafc"/>
+                            <!-- Stripes & Lights -->
+                            <line x1="30" y1="65" x2="160" y2="65" stroke="#1e293b" stroke-width="4"/>
+                            <circle cx="158" cy="72" r="4" fill="#ef4444"/>
+                            <circle cx="34" cy="40" r="3" fill="#ef4444"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= SLIDE 5: COMMUNICATION ================= -->
+            <div id="slide5" class="slide-container slide-transition w-full hidden flex-col space-y-4">
+                <h2 class="font-display font-bold text-2xl md:text-4xl text-[#1e293b] flex items-center gap-3">
+                    <i class="fa-solid fa-comments text-indigo-500"></i> Talking to Friends <span class="text-base md:text-xl text-purple-600 font-semibold">/ 如何跟好朋友聯絡？</span>
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full pt-2">
+                    <!-- Step 1 -->
+                    <div class="bg-orange-50/70 border border-orange-200 rounded-2xl p-4 text-center flex flex-col justify-between">
+                        <div>
+                            <div class="text-orange-500 text-3xl mb-2"><i class="fa-solid fa-envelope-open-text"></i></div>
+                            <h3 class="font-bold text-md md:text-lg text-orange-800">1. Paper Letters <span class="text-xs font-semibold block">/ 手寫信件</span></h3>
+                            <p class="text-xs md:text-sm text-slate-600 mt-1">
+                                People wrote letters by hand! It took days or weeks for a mail carrier to deliver them.
+                            </p>
+                        </div>
+                        <span class="text-purple-600 text-xs font-semibold block mt-3 border-t border-orange-100 pt-2">
+                            以前要一筆一劃寫信，郵差叔叔要花好幾天甚至星期才能送到！
+                        </span>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="bg-purple-50/70 border border-purple-200 rounded-2xl p-4 text-center flex flex-col justify-between">
+                        <div>
+                            <div class="text-purple-500 text-3xl mb-2"><i class="fa-solid fa-phone"></i></div>
+                            <h3 class="font-bold text-md md:text-lg text-purple-800">2. Rotary Phones <span class="text-xs font-semibold block">/ 撥號電話</span></h3>
+                            <p class="text-xs md:text-sm text-slate-600 mt-1">
+                                Later, houses shared heavy dial-up phones connected by long wires. No texting, only calling!
+                            </p>
+                        </div>
+                        <span class="text-purple-600 text-xs font-semibold block mt-3 border-t border-purple-100 pt-2">
+                            後來，家裡有了有線大電話，要用手指轉圈撥號。那時不能傳訊息喔！
+                        </span>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="bg-emerald-50/70 border border-emerald-200 rounded-2xl p-4 text-center flex flex-col justify-between">
+                        <div>
+                            <div class="text-emerald-500 text-3xl mb-2"><i class="fa-solid fa-video"></i></div>
+                            <h3 class="font-bold text-md md:text-lg text-emerald-800">3. Video Calls <span class="text-xs font-semibold block">/ 即時視訊</span></h3>
+                            <p class="text-xs md:text-sm text-slate-600 mt-1">
+                                Today, we can video chat instantly, send funny emojis, and talk face-to-face from anywhere!
+                            </p>
+                        </div>
+                        <span class="text-purple-600 text-xs font-semibold block mt-3 border-t border-emerald-100 pt-2">
+                            現在我們可以隨時用平板或手機面對面視訊，還能傳可愛的貼圖！
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= SLIDE 6: INTERACTIVE TIMELINE ANIMATOR ================= -->
+            <div id="slide6" class="slide-container slide-transition w-full hidden flex-col space-y-4">
+                <h2 class="font-display font-bold text-2xl md:text-4xl text-[#1e293b] flex items-center gap-3">
+                    <i class="fa-solid fa-circle-play text-red-500 animate-pulse"></i> Time Machine Animator <span class="text-base md:text-xl text-purple-600 font-semibold">/ 時光轉變動畫機</span>
+                </h2>
+
+                <p class="text-xs md:text-sm text-slate-600">
+                    Click the Play button inside our "Time TV" to watch old items travel through the vortex and turn into modern toys!
+                    <span class="block text-purple-500 font-semibold">點選電視裡的播放按鈕，看一看生活用品在時光穿梭機裡是怎麼變魔術的！</span>
+                </p>
+
+                <div class="relative bg-slate-900 rounded-3xl p-4 flex flex-col items-center border-8 border-slate-700 shadow-inner w-full overflow-hidden">
+                    <!-- Screen/Canvas -->
+                    <canvas id="timeMachineCanvas" class="w-full bg-slate-950 rounded-xl" style="aspect-ratio: 2.3 / 1; max-height: 240px;"></canvas>
+                    
+                    <!-- TV Bottom Controls -->
+                    <div class="flex justify-between items-center w-full mt-3 px-2">
+                        <div class="flex items-center gap-3">
+                            <button id="canvasPlayBtn" onclick="toggleCanvasAnimation()" class="bg-red-500 hover:bg-red-400 text-white font-bold px-4 py-2 rounded-full text-xs md:text-sm flex items-center gap-2 transition-all shadow-md shadow-red-500/20">
+                                <i id="playIconSvg" class="fa-solid fa-play"></i> <span id="btnPlayText">Play Animation / 播放</span>
+                            </button>
+                            <span id="canvasStatus" class="text-xs md:text-sm text-emerald-400 font-mono">Status: Ready / 準備就緒</span>
+                        </div>
+                        <div class="hidden md:flex gap-1">
+                            <span class="w-3 h-3 rounded-full bg-red-500"></span>
+                            <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
+                            <span class="w-3 h-3 rounded-full bg-green-500"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= SLIDE 7: INTERACTIVE QUIZ ================= -->
+            <div id="slide7" class="slide-container slide-transition w-full hidden flex-col space-y-4">
+                <h2 class="font-display font-bold text-2xl md:text-4xl text-[#1e293b] flex items-center gap-3">
+                    <i class="fa-solid fa-circle-question text-emerald-500"></i> Time Traveler Quiz! <span class="text-base md:text-xl text-purple-600 font-semibold">/ 時光旅行小挑戰</span>
+                </h2>
+                <p class="text-xs md:text-sm text-slate-600">
+                    Which era did this magical item belong to? Click to test your knowledge!
+                    <span class="block text-purple-500 font-semibold">猜一猜！這些神奇寶物應該屬於哪一個時代呢？點選按鈕來揭曉答案！</span>
+                </p>
+
+                <!-- Responsive Quiz Rows -->
+                <div class="space-y-3 w-full max-h-[250px] md:max-h-[350px] overflow-y-auto pr-1">
+                    
+                    <!-- Question 1 -->
+                    <div class="flex flex-col sm:flex-row justify-between items-center bg-slate-50 border border-slate-200 rounded-xl p-3 gap-3">
+                        <div class="text-center sm:text-left">
+                            <span class="font-bold text-sm md:text-base text-slate-800 block">📝 Hand-written Letter <span class="text-purple-600 text-xs font-semibold block sm:inline">/ 手寫信</span></span>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="answerQuiz(this, 'past', 1)" class="px-4 py-2 text-xs md:text-sm font-semibold rounded-lg bg-white border border-slate-300 hover:bg-slate-100 transition">The Past (過去)</button>
+                            <button onclick="answerQuiz(this, 'present', 1)" class="px-4 py-2 text-xs md:text-sm font-semibold rounded-lg bg-white border border-slate-300 hover:bg-slate-100 transition">The Present (現在)</button>
+                        </div>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="flex flex-col sm:flex-row justify-between items-center bg-slate-50 border border-slate-200 rounded-xl p-3 gap-3">
+                        <div class="text-center sm:text-left">
+                            <span class="font-bold text-sm md:text-base text-slate-800 block">📱 iPad & Tablet <span class="text-purple-600 text-xs font-semibold block sm:inline">/ 平板電腦</span></span>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="answerQuiz(this, 'past', 2)" class="px-4 py-2 text-xs md:text-sm font-semibold rounded-lg bg-white border border-slate-300 hover:bg-slate-100 transition">The Past (過去)</button>
+                            <button onclick="answerQuiz(this, 'present', 2)" class="px-4 py-2 text-xs md:text-sm font-semibold rounded-lg bg-white border border-slate-300 hover:bg-slate-100 transition">The Present (現在)</button>
+                        </div>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="flex flex-col sm:flex-row justify-between items-center bg-slate-50 border border-slate-200 rounded-xl p-3 gap-3">
+                        <div class="text-center sm:text-left">
+                            <span class="font-bold text-sm md:text-base text-slate-800 block">🐴 Horse Carriage <span class="text-purple-600 text-xs font-semibold block sm:inline">/ 載客馬車</span></span>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="answerQuiz(this, 'past', 3)" class="px-4 py-2 text-xs md:text-sm font-semibold rounded-lg bg-white border border-slate-300 hover:bg-slate-100 transition">The Past (過去)</button>
+                            <button onclick="answerQuiz(this, 'present', 3)" class="px-4 py-2 text-xs md:text-sm font-semibold rounded-lg bg-white border border-slate-300 hover:bg-slate-100 transition">The Present (現在)</button>
+                        </div>
+                    </div>
+
+                    <!-- Question 4 -->
+                    <div class="flex flex-col sm:flex-row justify-between items-center bg-slate-50 border border-slate-200 rounded-xl p-3 gap-3">
+                        <div class="text-center sm:text-left">
+                            <span class="font-bold text-sm md:text-base text-slate-800 block">🚌 Yellow School Bus <span class="text-purple-600 text-xs font-semibold block sm:inline">/ 黃色校車</span></span>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="answerQuiz(this, 'past', 4)" class="px-4 py-2 text-xs md:text-sm font-semibold rounded-lg bg-white border border-slate-300 hover:bg-slate-100 transition">The Past (過去)</button>
+                            <button onclick="answerQuiz(this, 'present', 4)" class="px-4 py-2 text-xs md:text-sm font-semibold rounded-lg bg-white border border-slate-300 hover:bg-slate-100 transition">The Present (現在)</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ================= SLIDE 8: Q&A DISCUSSION ================= -->
+            <div id="slide8" class="slide-container slide-transition w-full hidden flex-col items-center text-center space-y-6">
+                <div class="text-orange-500 text-6xl animate-bounce"><i class="fa-solid fa-comments"></i></div>
+                <h1 class="font-display font-bold text-3xl md:text-5xl text-[#1e293b]">
+                    Any Questions?
+                    <span class="block text-xl md:text-3xl text-purple-600 font-bold mt-2">大家有什麼問題嗎？</span>
+                </h1>
+                <p class="text-sm md:text-lg max-w-xl text-slate-600 leading-relaxed">
+                    What was your favorite Past vs. Present discovery today? Let's discuss!
+                    <span class="block text-purple-500 text-sm md:text-base font-semibold mt-2">今天，哪一個「過去與現在」的大轉變最讓你驚奇呢？我們一起來聊聊吧！</span>
+                </p>
+                <div class="mt-4 px-6 py-3 bg-orange-50 border-2 border-dashed border-orange-200 rounded-full inline-block">
+                    <p class="font-bold text-sm md:text-base text-slate-800 m-0">
+                        🏫 Let's Share our Thoughts! <span class="text-purple-600">/ 課堂分享時間</span>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- PRESENTATION CONTROLS (Elegantly docked inside layout) -->
+        <div class="bg-slate-50 border-t border-slate-100 p-4 flex flex-col sm:flex-row items-center justify-between gap-3 z-20">
+            <!-- Back Button -->
+            <button id="prevBtn" onclick="changeSlide(-1)" class="w-full sm:w-auto bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-5 py-2.5 rounded-full text-sm md:text-base flex items-center justify-center gap-2 transition active:scale-95 disabled:opacity-50 disabled:pointer-events-none">
+                <i class="fa-solid fa-arrow-left"></i> Previous <span class="text-xs font-normal">/ 上一頁</span>
+            </button>
+
+            <!-- Navigation Dots Indicator / Clickable directly -->
+            <div id="slideIndicatorContainer" class="flex gap-2 justify-center items-center py-2">
+                <!-- Javascript will render dots here -->
+            </div>
+
+            <!-- Next Button -->
+            <button id="nextBtn" onclick="changeSlide(1)" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 text-white font-bold px-5 py-2.5 rounded-full text-sm md:text-base flex items-center justify-center gap-2 transition active:scale-95 disabled:opacity-50 disabled:pointer-events-none shadow-md shadow-blue-600/20">
+                Next <span class="text-xs font-normal text-blue-100">/ 下一頁</span> <i class="fa-solid fa-arrow-right"></i>
+            </button>
         </div>
     </div>
 
-    <!-- PERSISTENT PRESENTATION NAVIGATION FOR GITHUB PAGES -->
-    <div class="nav-controls">
-        <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" disabled>
-            <i class="fa-solid fa-arrow-left"></i> Previous <span style="font-size: 14px;">(上一頁)</span>
-        </button>
-        <div class="slide-counter" id="slideCounter">Slide 1 of 8</div>
-        <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">
-            Next <span style="font-size: 14px;">(下一頁)</span> <i class="fa-solid fa-arrow-right"></i>
-        </button>
+    <!-- HINT BAR FOR COMPUTERS -->
+    <div class="text-slate-400 text-xs text-center mt-3 font-medium hidden md:block">
+        💡 Hint: Use your computer's <b>Left / Right Arrow Keys</b> or <b>Spacebar</b> to switch slides!
     </div>
 
-    <div class="keyboard-hint">
-        💡 Pro-Tip: You can use your keyboard <b>Left / Right arrow keys</b> or <b>Spacebar</b> to change slides!
-    </div>
-
-    <!-- PRESENTATION LOGIC SCRIPT -->
+    <!-- PRESENTATION LOGIC ENGINE & ANIMATION SYSTEM -->
     <script>
         let currentSlide = 1;
         const totalSlides = 8;
 
-        // Slide navigation controller
-        function updateSlides() {
-            // Hide all slide containers
+        // Correct Era definitions for interactive quiz
+        const quizAnswers = {
+            1: 'past',
+            2: 'present',
+            3: 'past',
+            4: 'present'
+        };
+
+        // Render Slide Indicators
+        function renderDots() {
+            const container = document.getElementById('slideIndicatorContainer');
+            container.innerHTML = '';
             for (let i = 1; i <= totalSlides; i++) {
-                document.getElementById(`slide${i}`).classList.remove('active');
+                const dot = document.createElement('button');
+                dot.className = `w-3.5 h-3.5 rounded-full transition-all duration-300 focus:outline-none ${i === currentSlide ? 'bg-blue-600 w-8' : 'bg-slate-300 hover:bg-slate-400'}`;
+                dot.setAttribute('title', `Go to slide ${i}`);
+                dot.onclick = () => {
+                    currentSlide = i;
+                    updateSlides();
+                };
+                container.appendChild(dot);
             }
-            // Show current active container
-            document.getElementById(`slide${currentSlide}`).classList.add('active');
-
-            // Update Counter Text
-            document.getElementById('slideCounter').innerText = `Slide ${currentSlide} of ${totalSlides}`;
-
-            // Handle Button Disabled states
-            document.getElementById('prevBtn').disabled = (currentSlide === 1);
-            document.getElementById('nextBtn').disabled = (currentSlide === totalSlides);
         }
 
+        // Active slide updates
+        function updateSlides() {
+            // Hide all slides
+            for (let i = 1; i <= totalSlides; i++) {
+                const slide = document.getElementById(`slide${i}`);
+                slide.classList.add('hidden');
+                slide.classList.remove('flex');
+                slide.style.opacity = '0';
+                slide.style.transform = 'translateY(10px)';
+            }
+
+            // Show current slide
+            const activeSlide = document.getElementById(`slide${currentSlide}`);
+            activeSlide.classList.remove('hidden');
+            activeSlide.classList.add('flex');
+            
+            // Trigger animation frame transition
+            setTimeout(() => {
+                activeSlide.style.opacity = '1';
+                activeSlide.style.transform = 'translateY(0px)';
+            }, 50);
+
+            // Button controls
+            document.getElementById('prevBtn').disabled = (currentSlide === 1);
+            document.getElementById('nextBtn').disabled = (currentSlide === totalSlides);
+
+            // Re-render dot indicator
+            renderDots();
+
+            // Auto-start or Pause canvas based on active slide visibility
+            if (currentSlide === 6) {
+                initCanvas();
+            } else {
+                stopAnimation();
+            }
+        }
+
+        // Slide change handler
         function changeSlide(direction) {
             currentSlide += direction;
             if (currentSlide < 1) currentSlide = 1;
@@ -755,7 +510,32 @@
             updateSlides();
         }
 
-        // Key listeners for seamless presentations
+        // Touch Swipe Gesture support for Tablets and Mobiles
+        let touchstartX = 0;
+        let touchendX = 0;
+
+        document.addEventListener('touchstart', e => {
+            touchstartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', e => {
+            touchendX = e.changedTouches[0].screenX;
+            handleGesture();
+        });
+
+        function handleGesture() {
+            const threshold = 50; // Minimum swipe distance in pixels
+            if (touchendX < touchstartX - threshold) {
+                // Swiped Left -> Next Slide
+                if (currentSlide < totalSlides) changeSlide(1);
+            }
+            if (touchendX > touchstartX + threshold) {
+                // Swiped Right -> Previous Slide
+                if (currentSlide > 1) changeSlide(-1);
+            }
+        }
+
+        // Keyboard navigation handler
         window.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowRight' || e.key === ' ') {
                 e.preventDefault();
@@ -766,73 +546,219 @@
             }
         });
 
-        // Slide 6: Simulated Video Player Progress Bar Logic
+
+        // CANVAS TIME MACHINE ANIMATION LOGIC
+        let canvas = null;
+        let ctx = null;
+        let animationFrameId = null;
         let isPlaying = false;
-        function simulateVideoPlay() {
-            const progressFill = document.getElementById('progressFill');
-            const playIcon = document.getElementById('playIcon');
-            const videoStatus = document.getElementById('videoStatus');
+        let progress = 0; // 0 to 1 representing item traveling
+        let activeItemIndex = 0; // 0: Toy, 1: School, 2: Phone
+
+        // Array of objects comparing old vs new for live canvas animation
+        const timeItems = [
+            { oldIcon: "🪵", oldText: "Wooden Block (積木)", newIcon: "🎮", newText: "Game Console (遊戲機)" },
+            { oldIcon: "📜", oldText: "Quill Ink (羽毛筆)", newIcon: "💻", newText: "Smart Tablet (平板)" },
+            { oldIcon: "✉️", oldText: "Paper Letter (手寫信)", newIcon: "📱", newText: "Video Phone (視訊)" }
+        ];
+
+        function initCanvas() {
+            canvas = document.getElementById('timeMachineCanvas');
+            if (!canvas) return;
+            ctx = canvas.getContext('2d');
+            
+            // Adjust resolution for Retina screens
+            const dpr = window.devicePixelRatio || 1;
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.scale(dpr, dpr);
+
+            drawScreen();
+        }
+
+        function drawScreen() {
+            if (!ctx) return;
+            const w = canvas.width / (window.devicePixelRatio || 1);
+            const h = canvas.height / (window.devicePixelRatio || 1);
+
+            // Clean background
+            ctx.fillStyle = "#020617";
+            ctx.fillRect(0, 0, w, h);
+
+            // Draw a subtle Time Vortex Grid in center
+            ctx.strokeStyle = "rgba(139, 92, 246, 0.2)";
+            ctx.lineWidth = 1.5;
+            for (let i = 0; i < 6; i++) {
+                ctx.beginPath();
+                ctx.arc(w / 2, h / 2, i * 25, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+
+            // Time Portal / Gate in Center
+            ctx.fillStyle = "rgba(139, 92, 246, 0.15)";
+            ctx.beginPath();
+            ctx.arc(w / 2, h / 2, 40, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Swirl spiral ring inside portal
+            ctx.strokeStyle = "#a855f7";
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            const angleOffset = progress * Math.PI * 6; // Spins as animation travels
+            for (let a = 0; a < Math.PI * 2; a += 0.1) {
+                const r = 10 + (a / (Math.PI * 2)) * 30;
+                const x = w / 2 + Math.cos(a + angleOffset) * r;
+                const y = h / 2 + Math.sin(a + angleOffset) * r;
+                if (a === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+
+            // Items to render
+            const activeItem = timeItems[activeItemIndex];
+
+            // Render Traveling Object
+            ctx.font = "32px serif";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
 
             if (!isPlaying) {
-                isPlaying = true;
-                playIcon.className = "fa-solid fa-pause";
-                progressFill.style.width = "100%";
-                videoStatus.innerHTML = `
-                    <b>Playing Movie...</b> Look at how fast time flies!
-                    <span class="translation-sub" style="color: #a7f3d0; font-size: 16px;">影片播放中... 看看時間過得有多快！</span>
-                `;
-                
-                // Reset simulation after 3 seconds (as scheduled by CSS animation)
-                setTimeout(() => {
-                    progressFill.style.transition = 'none';
-                    progressFill.style.width = '0%';
-                    setTimeout(() => {
-                        progressFill.style.transition = 'width 3s linear';
-                    }, 50);
-                    isPlaying = false;
-                    playIcon.className = "fa-solid fa-play";
-                    videoStatus.innerHTML = `
-                        Watch objects transform from 100 years ago into modern items!
-                        <span class="translation-sub" style="color: #a7f3d0; font-size: 16px;">看一看生活用品在100年間是怎麼變魔術的！</span>
-                    `;
-                }, 3200);
+                // Static display: show both ends with labels
+                ctx.fillText(activeItem.oldIcon, w * 0.2, h / 2);
+                ctx.fillText(activeItem.newIcon, w * 0.8, h / 2);
+
+                ctx.font = "11px sans-serif";
+                ctx.fillStyle = "#94a3b8";
+                ctx.fillText(activeItem.oldText, w * 0.2, h / 2 + 30);
+                ctx.fillText(activeItem.newText, w * 0.8, h / 2 + 30);
+
+                ctx.font = "10px sans-serif";
+                ctx.fillStyle = "#475569";
+                ctx.fillText("Ready to travel!", w / 2, h - 15);
+            } else {
+                // Active Animation loop drawing object passing through portal
+                if (progress < 0.5) {
+                    // Item travels from Left to Center Portal
+                    const ratio = progress / 0.5; // 0 to 1
+                    const x = (w * 0.2) + (w / 2 - w * 0.2) * ratio;
+                    const scaleFactor = 1 - (ratio * 0.4); // shrink as it enters portal
+                    
+                    ctx.save();
+                    ctx.translate(x, h / 2);
+                    ctx.scale(scaleFactor, scaleFactor);
+                    ctx.fillText(activeItem.oldIcon, 0, 0);
+                    ctx.restore();
+
+                    // Text guidance
+                    ctx.font = "12px sans-serif";
+                    ctx.fillStyle = "#f97316";
+                    ctx.fillText(`Entering Time Warp!...`, w / 2, h - 15);
+                } else {
+                    // Item travels from Center Portal to Right side
+                    const ratio = (progress - 0.5) / 0.5; // 0 to 1
+                    const x = (w / 2) + (w * 0.8 - w / 2) * ratio;
+                    const scaleFactor = 0.6 + (ratio * 0.4); // grow as it emerges
+
+                    ctx.save();
+                    ctx.translate(x, h / 2);
+                    ctx.scale(scaleFactor, scaleFactor);
+                    ctx.fillText(activeItem.newIcon, 0, 0);
+                    ctx.restore();
+
+                    // Tiny Sparkle stars around emerging object
+                    ctx.fillStyle = "#eab308";
+                    for(let star=0; star < 4; star++) {
+                        const starX = x + Math.sin(progress*10 + star)*15;
+                        const starY = (h / 2) + Math.cos(progress*10 + star)*15;
+                        ctx.beginPath();
+                        ctx.arc(starX, starY, 2, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+
+                    // Text guidance
+                    ctx.font = "12px sans-serif";
+                    ctx.fillStyle = "#22c55e";
+                    ctx.fillText(`Modernization complete! ✨`, w / 2, h - 15);
+                }
             }
         }
 
-        // Slide 7: Interactive Quiz Verification Logic
-        const quizAnswers = {
-            1: 'past',     // Paper Letter is Past
-            2: 'present',  // Tablet is Present
-            3: 'past',     // Horse Carriage is Past
-            4: 'present'   // School Bus is Present
-        };
+        function runAnimationLoop() {
+            if (!isPlaying) return;
+            progress += 0.008; // Adjust to speed up/slow down time machine transition
+            if (progress >= 1.0) {
+                progress = 0;
+                // Shift to next item
+                activeItemIndex = (activeItemIndex + 1) % timeItems.length;
+            }
+            drawScreen();
+            animationFrameId = requestAnimationFrame(runAnimationLoop);
+        }
 
-        function checkAnswer(button, selectedAnswer) {
-            // Find which row we are in
-            const row = button.closest('tr');
-            const rowIndex = row.rowIndex; // Row 1-4 correspond to table index
+        function toggleCanvasAnimation() {
+            const btnText = document.getElementById('btnPlayText');
+            const playIcon = document.getElementById('playIconSvg');
+            const status = document.getElementById('canvasStatus');
 
-            // Clear previous highlighting inside this row's buttons
-            const buttonsInRow = row.querySelectorAll('.quiz-btn');
-            buttonsInRow.forEach(btn => btn.className = 'quiz-btn');
-
-            // Apply style feedback
-            const correctAnswer = quizAnswers[rowIndex];
-            if (selectedAnswer === correctAnswer) {
-                button.classList.add('correct');
-                button.innerHTML = "✨ Correct! (正確) 🎉";
+            if (isPlaying) {
+                stopAnimation();
+                status.innerText = "Status: Paused / 暫停";
+                status.className = "text-xs md:text-sm text-yellow-400 font-mono";
             } else {
-                button.style.backgroundColor = "#fee2e2";
-                button.style.borderColor = "#ef4444";
-                button.style.color = "#b91c1c";
+                isPlaying = true;
+                btnText.innerText = "Pause / 暫停";
+                playIcon.className = "fa-solid fa-pause";
+                status.innerText = "Status: Warping Time! / 時光旅行中...";
+                status.className = "text-xs md:text-sm text-purple-400 font-mono animate-pulse";
+                runAnimationLoop();
+            }
+        }
+
+        function stopAnimation() {
+            isPlaying = false;
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+            }
+            const btnText = document.getElementById('btnPlayText');
+            const playIcon = document.getElementById('playIconSvg');
+            if (btnText && playIcon) {
+                btnText.innerText = "Play Animation / 播放";
+                playIcon.className = "fa-solid fa-play";
+            }
+        }
+
+        // QUIZ ANSWER HANDLER
+        function answerQuiz(button, chosenOption, questionId) {
+            const correctOption = quizAnswers[questionId];
+            
+            // Get siblings to reset their state
+            const buttons = button.parentNode.querySelectorAll('button');
+            buttons.forEach(btn => {
+                btn.className = "px-4 py-2 text-xs md:text-sm font-semibold rounded-lg bg-white border border-slate-300 hover:bg-slate-100 transition";
+            });
+
+            if (chosenOption === correctOption) {
+                // Correct styling
+                button.className = "px-4 py-2 text-xs md:text-sm font-semibold rounded-lg bg-emerald-500 text-white border border-emerald-500 transition shadow-md shadow-emerald-500/10";
+                button.innerHTML = "Correct! (正確) 🎉";
+            } else {
+                // Incorrect styling
+                button.className = "px-4 py-2 text-xs md:text-sm font-semibold rounded-lg bg-rose-500 text-white border border-rose-500 transition shadow-md shadow-rose-500/10";
                 button.innerHTML = "Try Again! (再試一次) 😮";
                 setTimeout(() => {
-                    button.style.backgroundColor = "";
-                    button.style.borderColor = "";
-                    button.style.color = "";
-                    button.innerHTML = selectedAnswer === 'past' ? 'The Past (過去)' : 'The Present (現在)';
-                }, 1200);
+                    button.className = "px-4 py-2 text-xs md:text-sm font-semibold rounded-lg bg-white border border-slate-300 hover:bg-slate-100 transition";
+                    button.innerHTML = chosenOption === 'past' ? "The Past (過去)" : "The Present (現在)";
+                }, 1500);
             }
+        }
+
+        // Initialize presentation on window load
+        window.onload = function() {
+            updateSlides();
+            window.addEventListener('resize', () => {
+                if (currentSlide === 6) initCanvas();
+            });
         }
     </script>
 </body>
