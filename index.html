@@ -34,12 +34,11 @@
         body {
             font-family: 'Fredoka', 'Noto Sans TC', sans-serif;
             background: linear-gradient(135deg, #f0fdf4 0%, #f0f9ff 50%, #fdf2f8 100%);
-            overflow: hidden; /* Prevent page-wide scrolling entirely */
+            overflow: hidden; /* Lock the screen to avoid any scrollbar leaks */
         }
         .font-display {
             font-family: 'Comfortaa', 'Noto Sans TC', sans-serif;
         }
-        
         .bounce-hover {
             transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.25s ease;
         }
@@ -50,10 +49,9 @@
             transform: scale(0.98);
         }
         .slide-transition {
-            transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
-
-        /* Custom scrollbar for scrollable content areas inside slides */
+        /* Custom scrollbar for slide internal layouts if needed */
         .slide-scroll::-webkit-scrollbar {
             width: 6px;
         }
@@ -65,10 +63,7 @@
             background: rgba(139, 92, 246, 0.3);
             border-radius: 999px;
         }
-        .slide-scroll::-webkit-scrollbar-thumb:hover {
-            background: rgba(139, 92, 246, 0.6);
-        }
-
+        /* Virtual Fullscreen fallback styling */
         .is-virtual-fullscreen {
             position: fixed !important;
             top: 0 !important;
@@ -85,15 +80,14 @@
 </head>
 <body class="text-slate-800 h-screen w-screen flex items-center justify-center p-3 sm:p-6 select-none">
 
-    <!-- h-[92vh] and max-h-[640px] bounds the presentation card, forcing it to always fit the screen -->
     <div id="presentationContainer" class="w-full max-w-5xl h-[92vh] max-h-[640px] bg-white/95 rounded-3xl shadow-2xl shadow-purple-200/50 flex flex-col justify-between overflow-hidden relative border-4 border-purple-300/60 transition-all duration-500">
         
-        <!-- Soft Pastel Glow Orbs in Background -->
-        <div class="absolute top-[-20%] right-[-10%] w-[350px] h-[350px] rounded-full bg-pink-200/40 blur-3xl pointer-events-none"></div>
-        <div class="absolute bottom-[-20%] left-[-10%] w-[400px] h-[400px] rounded-full bg-blue-200/40 blur-3xl pointer-events-none"></div>
+        <!-- Interactive Background Pastel Orbs -->
+        <div class="absolute top-[-20%] right-[-10%] w-[350px] h-[350px] rounded-full bg-pink-100/40 blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-[-20%] left-[-10%] w-[400px] h-[400px] rounded-full bg-blue-100/40 blur-3xl pointer-events-none"></div>
 
-        <!-- Top Header Navigation Bar -->
-        <div class="bg-purple-50/90 backdrop-blur-md px-5 py-3.5 flex items-center justify-between border-b border-purple-200/60 z-30 shrink-0">
+        <!-- Header Navigation Bar -->
+        <div class="bg-purple-50/90 backdrop-blur-md px-5 py-3 flex items-center justify-between border-b border-purple-200/60 z-30 shrink-0">
             <div class="flex items-center gap-2.5">
                 <span class="bg-gradient-to-r from-pink-400 to-purple-500 text-white p-2 rounded-xl shadow-lg shadow-purple-300/50 flex items-center justify-center">
                     <i class="fa-solid fa-hourglass-half animate-spin-slow text-xs sm:text-sm"></i>
@@ -105,13 +99,13 @@
             </div>
 
             <div class="flex items-center gap-2">
-                <!-- Sound Toggle -->
+                <!-- Sound Synthesizer Controller -->
                 <button onclick="toggleSound()" id="soundBtn" class="bg-purple-100 hover:bg-purple-200 text-purple-800 p-2 rounded-xl transition duration-300 text-xs flex items-center gap-1.5 font-bold" title="Toggle sound effects">
                     <i id="soundIcon" class="fa-solid fa-volume-high"></i>
                     <span class="hidden sm:inline">Sound On</span>
                 </button>
                 
-                <!-- Fullscreen Toggle Button -->
+                <!-- Fullscreen Toggle -->
                 <button onclick="toggleFullscreen()" id="fullscreenBtn" class="bg-purple-600 hover:bg-purple-500 text-white font-bold px-3 py-2 rounded-xl transition-all duration-300 text-xs flex items-center gap-1.5 shadow-lg shadow-purple-500/20 hover:scale-105 active:scale-95" title="Go Fullscreen">
                     <i id="fullscreenIcon" class="fa-solid fa-expand"></i>
                     <span id="fullscreenBtnSpan" class="hidden sm:inline">Fullscreen / 全螢幕</span>
@@ -119,7 +113,7 @@
             </div>
         </div>
 
-        <!-- This container handles the slides and enables vertical scrolling ONLY internally if needed -->
+        <!-- Main slide presentation deck view - uses vertical center alignment and inner auto scroll guards -->
         <div class="flex-grow p-4 sm:p-6 md:p-8 z-10 overflow-y-auto slide-scroll flex items-center justify-center">
 
             <!-- ================= SLIDE 1: WELCOME SCREEN ================= -->
@@ -148,7 +142,7 @@
                                 <stop offset="100%" stop-color="#3b82f6" />
                             </linearGradient>
                         </defs>
-                        <!-- Past Side Illustration -->
+                        <!-- Past Side Visual Node -->
                         <g transform="translate(60, 105)">
                             <circle cx="0" cy="0" r="26" fill="#fef3c7" stroke="#fbbf24" stroke-width="3"/>
                             <path d="M -12 -8 L 12 -8 L 0 15 Z" fill="#d97706" stroke="#ffffff" stroke-width="1.5"/>
@@ -156,9 +150,9 @@
                             <circle cx="0" cy="-14" r="3" fill="#dc2626"/>
                             <text x="0" y="38" fill="#92400e" font-size="11" font-weight="bold" text-anchor="middle">PAST / 過去</text>
                         </g>
-                        <!-- Comet Transit -->
+                        <!-- Space Portal Comet Transit -->
                         <circle cx="200" cy="35" r="7" fill="#8b5cf6" class="animate-pulse"/>
-                        <!-- Present Side Illustration -->
+                        <!-- Present Side Visual Node -->
                         <g transform="translate(340, 105)">
                             <circle cx="0" cy="0" r="26" fill="#ecfdf5" stroke="#34d399" stroke-width="3"/>
                             <rect x="-12" y="-15" width="24" height="30" rx="3" fill="#06b6d4" stroke="#ffffff" stroke-width="1.5"/>
@@ -170,7 +164,6 @@
                 </div>
             </div>
 
-            <!-- ================= STREAMING_CHUNK: Rendering Slide 2 (Toys) ================= -->
             <!-- ================= SLIDE 2: TOYS & PLAYTIME ================= -->
             <div id="slide2" class="slide-container slide-transition w-full hidden flex-col space-y-4">
                 <h2 class="font-display font-bold text-2xl sm:text-3xl text-slate-900 flex items-center gap-2">
@@ -179,17 +172,23 @@
                 </h2>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-                    <!-- Past Card (Light Amber) -->
+                    <!-- Past Card (Light Amber Wooden Horse SVG) -->
                     <div class="bg-amber-50/90 border-2 border-amber-200 rounded-2xl p-4 sm:p-5 bounce-hover flex flex-col justify-between space-y-3 shadow-sm">
-                        <div class="space-y-1">
-                            <div class="flex items-center justify-between">
-                                <span class="text-4xl sm:text-5xl">🪵</span>
-                                <span class="bg-amber-100 text-amber-800 text-[11px] font-bold uppercase px-2.5 py-0.5 rounded-full border border-amber-200">Retro Play</span>
+                        <div class="flex items-start justify-between gap-3">
+                            <div class="space-y-1">
+                                <span class="bg-amber-100 text-amber-800 text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full border border-amber-200">Retro Play</span>
+                                <h3 class="font-bold text-xl text-amber-900">The Past <span class="text-xs font-bold text-amber-700">/ 以前</span></h3>
+                                <p class="text-xs sm:text-sm text-slate-800 leading-relaxed font-medium">
+                                    Children long ago played with simple toys crafted from <strong>wood, clay, or fabric</strong>. They relied on active imaginations!
+                                </p>
                             </div>
-                            <h3 class="font-bold text-xl sm:text-2xl text-amber-900">The Past <span class="text-xs font-bold text-amber-700">/ 以前</span></h3>
-                            <p class="text-xs sm:text-sm text-slate-800 leading-relaxed font-medium">
-                                Children long ago played with simple toys crafted from <strong>wood, clay, or fabric</strong>. They relied on active imaginations!
-                            </p>
+                            <!-- Inline SVG Rocking Horse -->
+                            <div class="w-16 h-16 shrink-0 bg-white rounded-xl p-1.5 border border-amber-200 flex items-center justify-center">
+                                <svg viewBox="0 0 64 64" class="w-full h-full text-amber-700" fill="currentColor">
+                                    <path d="M48 24c0-3.3-2.7-6-6-6h-6l-2-6c-.5-1.5-2-2.5-3.6-2.5h-4.8c-1.6 0-3.1 1-3.6 2.5l-2 6H14c-3.3 0-6 2.7-6 6v8c0 3.3 2.7 6 6 6h2l-4 12c-.5 1.5.6 3 2.1 3h39.8c1.5 0 2.6-1.5 2.1-3l-4-12h2c3.3 0 6-2.7 6-6v-8zm-22-8.5l1.5-4.5h4.8l1.5 4.5h-7.8zM14 22h30c1.1 0 2 .9 2 2v6H12v-6c0-1.1.9-2 2-2zm2.1 26l3.3-10h23.2l3.3 10H16.1zM54 36c0 1.1-.9 2-2 2H12c-1.1 0-2-.9-2-2v-2h44v2z" />
+                                    <path d="M4 56q28 8 56 0" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none"/>
+                                </svg>
+                            </div>
                         </div>
                         <div class="bg-amber-100/60 border border-amber-200 p-2.5 rounded-xl text-left">
                             <span class="text-amber-950 text-[11px] sm:text-xs font-bold block leading-relaxed">
@@ -198,17 +197,24 @@
                         </div>
                     </div>
 
-                    <!-- Present Card (Light Cyan) -->
+                    <!-- Present Card (Light Cyan Digital Game SVG) -->
                     <div class="bg-cyan-50/90 border-2 border-cyan-200 rounded-2xl p-4 sm:p-5 bounce-hover flex flex-col justify-between space-y-3 shadow-sm">
-                        <div class="space-y-1">
-                            <div class="flex items-center justify-between">
-                                <span class="text-4xl sm:text-5xl">🎮</span>
-                                <span class="bg-cyan-100 text-cyan-800 text-[11px] font-bold uppercase px-2.5 py-0.5 rounded-full border border-cyan-200">Digital Era</span>
+                        <div class="flex items-start justify-between gap-3">
+                            <div class="space-y-1">
+                                <span class="bg-cyan-100 text-cyan-800 text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full border border-cyan-200">Digital Era</span>
+                                <h3 class="font-bold text-xl text-cyan-900">The Present <span class="text-xs font-bold text-cyan-700">/ 現在</span></h3>
+                                <p class="text-xs sm:text-sm text-slate-800 leading-relaxed font-medium">
+                                    Today, we play with <strong>video consoles, robotic coding pets, and smart tablets</strong> with vibrant pixel graphics!
+                                </p>
                             </div>
-                            <h3 class="font-bold text-xl sm:text-2xl text-cyan-900">The Present <span class="text-xs font-bold text-cyan-700">/ 現在</span></h3>
-                            <p class="text-xs sm:text-sm text-slate-800 leading-relaxed font-medium">
-                                Today, we play with <strong>video consoles, robotic coding pets, and smart tablets</strong> with vibrant pixel graphics!
-                            </p>
+                            <!-- Inline SVG Handheld Game Console -->
+                            <div class="w-16 h-16 shrink-0 bg-white rounded-xl p-1.5 border border-cyan-200 flex items-center justify-center">
+                                <svg viewBox="0 0 64 64" class="w-full h-full text-cyan-600" fill="currentColor">
+                                    <rect x="10" y="6" width="44" height="52" rx="6" stroke="currentColor" stroke-width="4" fill="none"/>
+                                    <rect x="16" y="12" width="32" height="22" rx="2" fill="currentColor" fill-opacity="0.1" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M22 45h8M26 41v8M38 43a3 3 0 100-6 3 3 0 000 6zM44 49a3 3 0 100-6 3 3 0 000 6z" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                                </svg>
+                            </div>
                         </div>
                         <div class="bg-cyan-100/60 border border-cyan-200 p-2.5 rounded-xl text-left">
                             <span class="text-cyan-950 text-[11px] sm:text-xs font-bold block leading-relaxed">
@@ -228,37 +234,51 @@
                 </h2>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-                    <!-- Retro Classroom -->
-                    <div class="bg-amber-50/90 border-2 border-amber-200 rounded-2xl p-4.5 bounce-hover flex gap-3.5 items-center shadow-sm">
-                        <span class="text-4xl sm:text-5xl shrink-0 p-2 bg-amber-100 rounded-xl border border-amber-200">📝</span>
+                    <!-- Retro Classroom (Ink Well & Quill Pen SVG) -->
+                    <div class="bg-amber-50/90 border-2 border-amber-200 rounded-2xl p-4 bounce-hover flex gap-3.5 items-center shadow-sm">
+                        <!-- Inline SVG Quill Ink Well -->
+                        <div class="w-16 h-16 shrink-0 bg-white rounded-xl p-2 border border-amber-200 flex items-center justify-center">
+                            <svg viewBox="0 0 64 64" class="w-full h-full text-amber-800" fill="currentColor">
+                                <path d="M12 40v12h16V40H12zm24-20c-2.2 0-4 1.8-4 4s1.8 4 4 4h16c2.2 0 4-1.8 4-4s-1.8-4-4-4H36z" opacity="0.2"/>
+                                <path d="M42 6L18 30l-4 14 14-4 24-24L42 6zM22 32l20-20 6 6-20 20-6-6z" stroke="currentColor" stroke-width="3" fill="none"/>
+                                <path d="M8 50h24v6H8z" stroke="currentColor" stroke-width="4"/>
+                            </svg>
+                        </div>
                         <div class="space-y-1">
-                            <h3 class="font-bold text-lg sm:text-xl text-amber-900">Classic Slate & Ink <span class="text-[10px] sm:text-xs font-bold text-amber-700 block">/ 以前的教室與紙筆</span></h3>
+                            <h3 class="font-bold text-lg text-amber-900">Classic Slate & Ink <span class="text-[10px] font-bold text-amber-700 block">/ 以前的教室與紙筆</span></h3>
                             <p class="text-xs text-slate-800 leading-normal font-medium">
                                 Students wrote on blackboard slabs with chalk, or dipped fine metal quills into wet ink!
                             </p>
                             <p class="text-amber-950 text-[11px] font-bold border-t border-amber-200 pt-1 leading-tight">
-                                以前的同學在小黑板石板上寫字，或者用羽毛筆蘸著墨水寫字！
+                                以前的同學在小黑板石板上寫字，或者用羽毛筆外加黑黑色墨水！
                             </p>
                         </div>
                     </div>
 
-                    <!-- Smart Classroom -->
-                    <div class="bg-emerald-50/90 border-2 border-emerald-200 rounded-2xl p-4.5 bounce-hover flex gap-3.5 items-center shadow-sm">
-                        <span class="text-4xl sm:text-5xl shrink-0 p-2 bg-emerald-100 rounded-xl border border-emerald-200">💻</span>
+                    <!-- Smart Classroom (Smart Touch Tablet SVG) -->
+                    <div class="bg-emerald-50/90 border-2 border-emerald-200 rounded-2xl p-4 bounce-hover flex gap-3.5 items-center shadow-sm">
+                        <!-- Inline SVG Interactive Screen -->
+                        <div class="w-16 h-16 shrink-0 bg-white rounded-xl p-2 border border-emerald-200 flex items-center justify-center">
+                            <svg viewBox="0 0 64 64" class="w-full h-full text-emerald-600" fill="currentColor">
+                                <rect x="8" y="12" width="48" height="32" rx="4" stroke="currentColor" stroke-width="4" fill="none"/>
+                                <path d="M24 44v8M40 44v8M18 52h28" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+                                <path d="M22 24l6 6 14-14" stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none"/>
+                            </svg>
+                        </div>
                         <div class="space-y-1">
-                            <h3 class="font-bold text-lg sm:text-xl text-emerald-900">Smart Touchscreens <span class="text-[10px] sm:text-xs font-bold text-emerald-700 block">/ 現在的智慧課堂</span></h3>
+                            <h3 class="font-bold text-lg text-emerald-900">Smart Touchscreens <span class="text-[10px] font-bold text-emerald-700 block">/ 現在的智慧課堂</span></h3>
                             <p class="text-xs text-slate-800 leading-normal font-medium">
                                 Today's classrooms use interactive projectors and educational apps that turn science into a playground!
                             </p>
                             <p class="text-emerald-950 text-[11px] font-bold border-t border-emerald-200 pt-1 leading-tight">
-                                現在的教室有大大的觸控智慧白板，還能用平板玩學習APP！
+                                現在的教室有大大的觸控智慧白板，還能用平板玩有趣學習APP！
                             </p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- ================= STREAMING_CHUNK: Rendering Slide 4 (Transport) ================= -->
+            <!-- ================= STREAMING_CHUNK: Designing Slide 4 (Transport) ================= -->
             <!-- ================= SLIDE 4: TRAVELING TO SCHOOL ================= -->
             <div id="slide4" class="slide-container slide-transition w-full hidden flex-col space-y-4">
                 <h2 class="font-display font-bold text-2xl sm:text-3xl text-slate-900 flex items-center gap-2">
@@ -287,7 +307,7 @@
                         </div>
                     </div>
 
-                    <!-- Render Compact Vector Bus -->
+                    <!-- Render Compact Vector Bus SVG -->
                     <div class="bg-sky-50/50 rounded-2xl p-4 flex justify-center items-center h-32 sm:h-40 border border-indigo-200 shadow-inner">
                         <svg viewBox="0 0 200 110" class="h-full max-w-full">
                             <rect x="30" y="20" width="130" height="50" rx="10" fill="#f59e0b" stroke="#d97706" stroke-width="2"/>
@@ -307,7 +327,7 @@
                 </div>
             </div>
 
-            <!-- ================= STREAMING_CHUNK: Rendering Slide 5 (Communication) ================= -->
+            <!-- ================= STREAMING_CHUNK: Designing Slide 5 (Communication) ================= -->
             <!-- ================= SLIDE 5: COMMUNICATION ================= -->
             <div id="slide5" class="slide-container slide-transition w-full hidden flex-col space-y-4">
                 <h2 class="font-display font-bold text-2xl sm:text-3xl text-slate-900 flex items-center gap-2">
@@ -316,34 +336,52 @@
                 </h2>
 
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full">
-                    <!-- Step 1 -->
+                    <!-- Step 1 (Paper Envelope SVG) -->
                     <div class="bg-amber-50/90 border-2 border-amber-200 rounded-2xl p-3 text-center flex flex-col justify-between space-y-2 hover:border-amber-300 transition shadow-sm">
-                        <div>
-                            <div class="text-amber-600 text-3xl mb-1"><i class="fa-solid fa-envelope-open-text"></i></div>
+                        <div class="flex flex-col items-center">
+                            <!-- Inline Envelope SVG -->
+                            <div class="w-12 h-12 text-amber-600 mb-1">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-full h-full">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                    <polyline points="22,6 12,13 2,6"/>
+                                </svg>
+                            </div>
                             <h3 class="font-bold text-base text-amber-900">1. Paper Mail <span class="text-[10px] font-bold block text-amber-700">/ 手寫紙本信件</span></h3>
-                            <p class="text-[11px] text-slate-800 font-medium">Carriers traveled by foot or horseback to deliver them over weeks!</p>
+                            <p class="text-[11px] text-slate-800 font-medium leading-tight mt-1">Carriers traveled by foot or horseback to deliver them over weeks!</p>
                         </div>
-                        <span class="text-amber-950 text-[10px] font-bold block border-t border-amber-200 pt-1.5">以前寫在信紙上，由郵差送好幾個星期。</span>
+                        <span class="text-amber-950 text-[10px] font-bold block border-t border-amber-200 pt-1.5">以前寫在信紙上，由郵差寄送要好幾十天。</span>
                     </div>
 
-                    <!-- Step 2 -->
+                    <!-- Step 2 (Retro Phone SVG) -->
                     <div class="bg-fuchsia-50/90 border-2 border-fuchsia-200 rounded-2xl p-3 text-center flex flex-col justify-between space-y-2 hover:border-fuchsia-300 transition shadow-sm">
-                        <div>
-                            <div class="text-fuchsia-600 text-3xl mb-1"><i class="fa-solid fa-phone"></i></div>
+                        <div class="flex flex-col items-center">
+                            <!-- Inline Rotary Phone SVG -->
+                            <div class="w-12 h-12 text-fuchsia-600 mb-1">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-full h-full">
+                                    <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
+                                </svg>
+                            </div>
                             <h3 class="font-bold text-base text-fuchsia-900">2. Rotary Phone <span class="text-[10px] font-bold block text-fuchsia-700">/ 轉盤電話</span></h3>
-                            <p class="text-[11px] text-slate-800 font-medium">Heavy devices sat in living rooms. You could only hear voice, no texting!</p>
+                            <p class="text-[11px] text-slate-800 font-medium leading-tight mt-1">Heavy devices sat in living rooms. You could only hear voice, no texting!</p>
                         </div>
-                        <span class="text-fuchsia-950 text-[10px] font-bold block border-t border-fuchsia-200 pt-1.5">後來有了重重的轉盤電話，只能通話不能傳簡訊！</span>
+                        <span class="text-fuchsia-950 text-[10px] font-bold block border-t border-fuchsia-200 pt-1.5">後來有了重重的轉盤電話，只能通話不能打字！</span>
                     </div>
 
-                    <!-- Step 3 -->
+                    <!-- Step 3 (Video Phone Call SVG) -->
                     <div class="bg-cyan-50/90 border-2 border-cyan-200 rounded-2xl p-3 text-center flex flex-col justify-between space-y-2 hover:border-cyan-300 transition shadow-sm">
-                        <div>
-                            <div class="text-cyan-600 text-3xl mb-1"><i class="fa-solid fa-video"></i></div>
+                        <div class="flex flex-col items-center">
+                            <!-- Inline Video Call Screen SVG -->
+                            <div class="w-12 h-12 text-cyan-600 mb-1">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-full h-full">
+                                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+                                    <path d="M12 18h.01"/>
+                                    <circle cx="12" cy="10" r="3"/>
+                                </svg>
+                            </div>
                             <h3 class="font-bold text-base text-cyan-900">3. Video Chat <span class="text-[10px] font-bold block text-cyan-700">/ 即時網路視訊</span></h3>
-                            <p class="text-[11px] text-slate-800 font-medium">Instantly dial high-definition video calls with friends worldwide!</p>
+                            <p class="text-[11px] text-slate-800 font-medium leading-tight mt-1">Instantly dial high-definition video calls with friends worldwide!</p>
                         </div>
-                        <span class="text-cyan-950 text-[10px] font-bold block border-t border-cyan-200 pt-1.5">現在隨時用手機開視訊，一秒看見世界各地的朋友！</span>
+                        <span class="text-cyan-950 text-[10px] font-bold block border-t border-cyan-200 pt-1.5">現在隨時用手機開視訊，一秒見到全世界的朋友！</span>
                     </div>
                 </div>
             </div>
@@ -358,7 +396,7 @@
                     </h2>
                 </div>
 
-                <!-- Cinematic Movie Player with Compact height constraints -->
+                <!-- Cinematic Movie Player Container -->
                 <div class="bg-purple-100/60 rounded-2xl p-3 flex flex-col border-4 border-purple-200 shadow-lg w-full max-w-2xl mx-auto overflow-hidden">
                     
                     <!-- Split-Screen Movie Screen Stage -->
@@ -386,8 +424,8 @@
                         <div class="absolute inset-y-0 left-1/2 -ml-0.5 bg-gradient-to-b from-purple-400 via-pink-400 to-cyan-400 w-1 z-10 shadow-[0_0_8px_rgba(168,85,247,0.4)]"></div>
                     </div>
 
+                    <!-- Movie Playback controls bar -->
                     <div class="flex flex-col sm:flex-row items-center justify-between w-full mt-2 gap-2">
-                        <!-- Playback Status -->
                         <div class="flex items-center gap-2">
                             <button id="moviePlayBtn" onclick="toggleMoviePlayback()" class="bg-red-500 hover:bg-red-600 text-white font-bold px-3 py-1.5 rounded-lg text-[10px] sm:text-xs flex items-center gap-1.5 transition-all active:scale-95 shadow-md">
                                 <i id="moviePlayIcon" class="fa-solid fa-play"></i> <span id="moviePlayText">Play Movie / 播放</span>
@@ -395,12 +433,12 @@
                             <span id="movieStatusMsg" class="text-[10px] sm:text-xs text-purple-900 font-bold">Ready / 準備放映</span>
                         </div>
 
-                        <!-- Scrubber container -->
+                        <!-- Scrubber progress slider -->
                         <div class="flex-grow flex items-center gap-1.5 w-full sm:w-auto px-1">
                             <input type="range" id="movieScrubber" min="0" max="100" value="0" class="flex-grow accent-purple-600 cursor-pointer h-1.5 rounded-lg bg-purple-200" oninput="scrubMovie(this.value)">
                         </div>
 
-                        <!-- Scene Selector Switch -->
+                        <!-- Scene Selector -->
                         <div class="flex items-center gap-1 shrink-0 bg-white border-2 border-purple-200 p-0.5 rounded-lg">
                             <button onclick="changeMovieScene(0)" id="sceneBtn0" class="px-2.5 py-0.5 rounded text-[10px] font-bold bg-purple-600 text-white transition">Toys</button>
                             <button onclick="changeMovieScene(1)" id="sceneBtn1" class="px-2.5 py-0.5 rounded text-[10px] font-bold text-purple-700 hover:text-purple-900 transition">School</button>
@@ -423,13 +461,12 @@
                     </span>
                 </div>
 
-                <!-- Responsive Quiz Rows with Compact Heights -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full">
                     <!-- Question 1 -->
                     <div class="flex flex-col justify-between bg-purple-50/60 border border-purple-200 rounded-xl p-3 gap-1.5 shadow-sm">
                         <span class="text-slate-900 font-bold text-xs sm:text-sm leading-tight flex flex-col">
                             <span>📝 Quill Pen & Paper Letter</span>
-                            <span class="text-purple-800 text-[10px] sm:text-xs">羽毛筆與信紙</span>
+                            <span class="text-purple-800 text-[10px] sm:text-xs">羽毛筆與紙本信件</span>
                         </span>
                         <div class="flex gap-1.5">
                             <button onclick="answerQuiz(this, 'past', 1)" class="flex-1 py-1.5 text-xs font-bold rounded-lg bg-white hover:bg-purple-100/50 text-purple-950 border border-purple-200 transition">Past (過去)</button>
@@ -497,7 +534,7 @@
 
         </div>
 
-        <!-- Locked perfectly to the card layout footer, guaranteeing NO scrolling to reach buttons -->
+        <!-- Foot Navigation Bar (Locked strictly at the bottom) -->
         <div class="bg-purple-50/95 backdrop-blur-md border-t border-purple-200 p-3 flex items-center justify-between gap-3 z-20 shrink-0">
             <!-- Back Button -->
             <button id="prevBtn" onclick="changeSlide(-1)" class="bg-white hover:bg-purple-100 text-purple-900 hover:text-purple-950 font-bold px-4 py-2.5 rounded-xl text-xs sm:text-sm flex items-center gap-1 transition active:scale-95 disabled:opacity-35 disabled:pointer-events-none border border-purple-200 shadow-sm">
@@ -506,7 +543,7 @@
 
             <!-- Navigation Dots -->
             <div id="slideIndicatorContainer" class="flex gap-1.5 justify-center items-center py-1">
-                <!-- Script will render dots here -->
+                <!-- Javascript will load indicator points here -->
             </div>
 
             <!-- Next Button -->
@@ -516,7 +553,7 @@
         </div>
     </div>
 
-    <!-- HINT BAR FOR COMPUTERS -->
+    <!-- HINT BAR FOR DESKTOPS -->
     <div class="absolute bottom-1.5 text-slate-500 text-[10px] text-center font-bold hidden md:block">
         💡 Keyboard Keys: Left/Right Arrow Keys or Spacebar to flip slides easily!
     </div>
@@ -577,9 +614,10 @@
             }
         }
 
-        // Render Slide Indication Dots
+        // Render Navigation dots
         function renderDots() {
             const container = document.getElementById('slideIndicatorContainer');
+            if (!container) return;
             container.innerHTML = '';
             for (let i = 1; i <= totalSlides; i++) {
                 const dot = document.createElement('button');
@@ -595,25 +633,37 @@
         }
 
         function updateSlides() {
+            // Step 1: Hide all containers and reset transition states
             for (let i = 1; i <= totalSlides; i++) {
                 const slide = document.getElementById(`slide${i}`);
-                slide.classList.add('hidden');
-                slide.classList.remove('flex');
-                slide.style.opacity = '0';
-                slide.style.transform = 'translateY(8px)';
+                if (slide) {
+                    slide.classList.add('hidden');
+                    slide.classList.remove('flex');
+                    slide.style.opacity = '0';
+                    slide.style.transform = 'translateY(12px)';
+                }
             }
 
+            // Step 2: Set the targeted slide to active
             const activeSlide = document.getElementById(`slide${currentSlide}`);
-            activeSlide.classList.remove('hidden');
-            activeSlide.classList.add('flex');
-            
-            setTimeout(() => {
+            if (activeSlide) {
+                activeSlide.classList.remove('hidden');
+                activeSlide.classList.add('flex');
+                
+                // CRITICAL FIX: Void access forces browser reflow, forcing it to paint 'display: flex' 
+                // BEFORE the transition opacity triggers. This prevents the white screen bug!
+                void activeSlide.offsetHeight;
+
+                // Step 3: Trigger the clean fluid transition animation
                 activeSlide.style.opacity = '1';
                 activeSlide.style.transform = 'translateY(0px)';
-            }, 30);
+            }
 
-            document.getElementById('prevBtn').disabled = (currentSlide === 1);
-            document.getElementById('nextBtn').disabled = (currentSlide === totalSlides);
+            // Update footer controls
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            if (prevBtn) prevBtn.disabled = (currentSlide === 1);
+            if (nextBtn) nextBtn.disabled = (currentSlide === totalSlides);
 
             renderDots();
 
@@ -630,6 +680,7 @@
             playBeep(direction > 0 ? 587 : 494, 0.08, 'sine');
         }
 
+        // Fullscreen Mode with sandbox/iframe virtual layout fallbacks
         function toggleFullscreen() {
             const container = document.getElementById('presentationContainer');
             const icon = document.getElementById('fullscreenIcon');
@@ -650,7 +701,7 @@
                     if (btnSpan) btnSpan.textContent = 'Exit / 退出';
                     playBeep(784, 0.15, 'sine');
                 }).catch(err => {
-                    // Fallback to virtual fullscreen if standard is blocked by frame sandbox
+                    // Fallback to beautiful virtual fullscreen mock if browser sandbox blocks the API
                     container.classList.add('is-virtual-fullscreen');
                     if (icon) icon.className = 'fa-solid fa-compress';
                     if (btnSpan) btnSpan.textContent = 'Exit / 退出';
@@ -690,12 +741,12 @@
             }
         });
 
-        // Swipe support
+        // Touch Swipe Gesture Support
         let touchstartX = 0;
         let touchendX = 0;
         document.addEventListener('touchstart', e => {
             touchstartX = e.changedTouches[0].screenX;
-        });
+        }, { passive: true });
         document.addEventListener('touchend', e => {
             touchendX = e.changedTouches[0].screenX;
             const diff = touchstartX - touchendX;
@@ -703,7 +754,7 @@
                 if (diff > 0 && currentSlide < totalSlides) changeSlide(1);
                 if (diff < 0 && currentSlide > 1) changeSlide(-1);
             }
-        });
+        }, { passive: true });
 
         const movieScenes = [
             {
@@ -729,10 +780,12 @@
             activeSceneIndex = index;
             for (let i = 0; i < 3; i++) {
                 const btn = document.getElementById(`sceneBtn${i}`);
-                if (i === index) {
-                    btn.className = "px-2.5 py-0.5 rounded text-[10px] font-bold bg-purple-600 text-white transition";
-                } else {
-                    btn.className = "px-2.5 py-0.5 rounded text-[10px] font-bold text-purple-700 hover:text-purple-900 transition";
+                if (btn) {
+                    if (i === index) {
+                        btn.className = "px-2.5 py-0.5 rounded text-[10px] font-bold bg-purple-600 text-white transition";
+                    } else {
+                        btn.className = "px-2.5 py-0.5 rounded text-[10px] font-bold text-purple-700 hover:text-purple-900 transition";
+                    }
                 }
             }
             document.getElementById('movieRetroIcon').innerText = movieScenes[activeSceneIndex].retroIcon;
@@ -751,10 +804,12 @@
                 stopMoviePlayback();
             } else {
                 moviePlaying = true;
-                playIcon.className = "fa-solid fa-pause";
-                playBtnText.textContent = "Pause / 暫停";
-                statusMsg.textContent = "Playing... / 放映中";
-                statusMsg.className = "text-[10px] sm:text-xs text-red-600 font-bold animate-pulse";
+                if (playIcon) playIcon.className = "fa-solid fa-pause";
+                if (playBtnText) playBtnText.textContent = "Pause / 暫停";
+                if (statusMsg) {
+                    statusMsg.textContent = "Playing... / 放映中";
+                    statusMsg.className = "text-[10px] sm:text-xs text-red-600 font-bold animate-pulse";
+                }
                 playBeep(180, 0.4, 'triangle');
 
                 movieInterval = setInterval(() => {
@@ -764,7 +819,8 @@
                         activeSceneIndex = (activeSceneIndex + 1) % movieScenes.length;
                         changeMovieScene(activeSceneIndex);
                     }
-                    document.getElementById('movieScrubber').value = movieProgress;
+                    const scrubber = document.getElementById('movieScrubber');
+                    if (scrubber) scrubber.value = movieProgress;
                     animateMovieFrame();
                 }, 130);
             }
@@ -793,13 +849,13 @@
         function animateMovieFrame() {
             const retroFrame = document.getElementById('movieRetroIcon');
             const modernFrame = document.getElementById('movieModernIcon');
-            const factor = Math.sin((movieProgress / 100) * Math.PI * 4);
-            const scale = 1 + (factor * 0.1);
-            const rot = factor * 6;
-            
-            retroFrame.style.transform = `scale(${scale}) rotate(${-rot}deg)`;
-            modernFrame.style.transform = `scale(${scale}) rotate(${rot}deg)`;
-            
+            if (retroFrame && modernFrame) {
+                const factor = Math.sin((movieProgress / 100) * Math.PI * 4);
+                const scale = 1 + (factor * 0.1);
+                const rot = factor * 6;
+                retroFrame.style.transform = `scale(${scale}) rotate(${-rot}deg)`;
+                modernFrame.style.transform = `scale(${scale}) rotate(${rot}deg)`;
+            }
             if (movieProgress % 10 === 0) {
                 playBeep(240, 0.02, 'sine');
             }
@@ -835,6 +891,7 @@
             }
         }
 
+        // Initialize presentation on window loaded state
         window.onload = function() {
             updateSlides();
         }
