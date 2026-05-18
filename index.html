@@ -1,900 +1,401 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Time Travel Adventure! 過去與現在的時光冒險</title>
-    
-    <script>
-        window.tailwind = window.tailwind || {};
-        window.tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Fredoka', 'Noto Sans TC', 'sans-serif'],
-                        display: ['Comfortaa', 'Noto Sans TC', 'sans-serif'],
-                    },
-                    animation: {
-                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'bounce-slow': 'bounce 2.5s infinite',
-                        'spin-slow': 'spin 12s linear infinite',
-                    }
-                }
-            }
-        };
-    </script>
-
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&family=Noto+Sans+TC:wght@400;700&family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
+    <title>Past vs Present Lesson</title>
     <style>
-        body {
-            font-family: 'Fredoka', 'Noto Sans TC', sans-serif;
-            background: linear-gradient(135deg, #f0fdf4 0%, #f0f9ff 50%, #fdf2f8 100%);
-            overflow: hidden; /* Lock the screen to avoid any scrollbar leaks */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
         }
-        .font-display {
-            font-family: 'Comfortaa', 'Noto Sans TC', sans-serif;
+
+        body, html {
+            height: 100%;
+            overflow: hidden;
+            background-color: #f0f4f8;
         }
-        .bounce-hover {
-            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.25s ease;
+
+        /* Presentation Container fixed to viewport to avoid scrolling */
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+            position: relative;
         }
-        .bounce-hover:hover {
-            transform: scale(1.02) translateY(-2px);
+
+        /* Slide Window */
+        .slide-window {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: background-color 0.5s ease;
         }
-        .bounce-hover:active {
-            transform: scale(0.98);
+
+        /* Individual Slides */
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+            padding: 40px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
         }
-        .slide-transition {
-            transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
+        .slide.active {
+            display: flex;
         }
-        /* Custom scrollbar for slide internal layouts if needed */
-        .slide-scroll::-webkit-scrollbar {
-            width: 6px;
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .slide-scroll::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.03);
-            border-radius: 999px;
+
+        /* Pastel Themes per slide */
+        .bg-pastel-pink { background-color: #ffe5ec; }
+        .bg-pastel-blue { background-color: #e8f0fe; }
+        .bg-pastel-purple { background-color: #f3e5f5; }
+        .bg-pastel-green { background-color: #e8f5e9; }
+        .bg-pastel-yellow { background-color: #fffde7; }
+
+        /* Typography */
+        h1 {
+            font-size: 3.5rem;
+            color: #4a4a4a;
+            margin-bottom: 10px;
         }
-        .slide-scroll::-webkit-scrollbar-thumb {
-            background: rgba(139, 92, 246, 0.3);
-            border-radius: 999px;
+        
+        h2 {
+            font-size: 2.8rem;
+            color: #4a4a4a;
+            margin-bottom: 15px;
         }
-        /* Virtual Fullscreen fallback styling */
-        .is-virtual-fullscreen {
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            width: 100vw !important;
-            height: 100vh !important;
-            z-index: 9999 !important;
-            max-width: none !important;
-            max-height: none !important;
-            border-radius: 0 !important;
-            border: none !important;
+
+        .translation {
+            font-size: 1.8rem;
+            color: #7a7a7a;
+            font-weight: normal;
+            margin-bottom: 30px;
+            display: block;
+        }
+
+        p {
+            font-size: 1.8rem;
+            color: #5a5a5a;
+            max-width: 800px;
+            line-height: 1.5;
+        }
+
+        /* Grid Layouts for Examples */
+        .grid-container {
+            display: flex;
+            gap: 30px;
+            width: 100%;
+            max-width: 1000px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .grid-card {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 25px;
+            border-radius: 15px;
+            flex: 1;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.02);
+        }
+
+        .grid-card h3 {
+            font-size: 2.2rem;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .grid-card p {
+            font-size: 1.5rem;
+            margin: 10px auto;
+        }
+
+        .highlight-verb {
+            color: #d81b60;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        /* Video Simulation Box */
+        .video-box {
+            width: 100%;
+            max-width: 700px;
+            height: 350px;
+            background: #222;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            position: relative;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .video-screen {
+            font-size: 2rem;
+            font-weight: bold;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .video-controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+        }
+
+        /* Footer Navigation Controls */
+        .controls-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            background: transparent;
+        }
+
+        button {
+            padding: 12px 28px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            background-color: #ffffff;
+            color: #4a4a4a;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            background-color: #fdfdfd;
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .btn-nav {
+            background-color: #4a90e2;
+            color: white;
+        }
+        .btn-nav:hover {
+            background-color: #357abd;
+        }
+
+        .slide-indicator {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #666;
+            background: rgba(255,255,255,0.6);
+            padding: 6px 16px;
+            border-radius: 20px;
+        }
+
+        /* Fullscreen Button in top right */
+        .fullscreen-btn {
+            position: absolute;
+            top: 35px;
+            right: 35px;
+            z-index: 100;
+            background: rgba(255,255,255,0.7);
+            padding: 8px 15px;
+            font-size: 0.9rem;
         }
     </style>
 </head>
-<body class="text-slate-800 h-screen w-screen flex items-center justify-center p-3 sm:p-6 select-none">
+<body>
 
-    <div id="presentationContainer" class="w-full max-w-5xl h-[92vh] max-h-[640px] bg-white/95 rounded-3xl shadow-2xl shadow-purple-200/50 flex flex-col justify-between overflow-hidden relative border-4 border-purple-300/60 transition-all duration-500">
+    <div class="presentation-container">
         
-        <!-- Interactive Background Pastel Orbs -->
-        <div class="absolute top-[-20%] right-[-10%] w-[350px] h-[350px] rounded-full bg-pink-100/40 blur-3xl pointer-events-none"></div>
-        <div class="absolute bottom-[-20%] left-[-10%] w-[400px] h-[400px] rounded-full bg-blue-100/40 blur-3xl pointer-events-none"></div>
+        <button class="fullscreen-btn" onclick="toggleFullscreen()">🖥️ Fullscreen / 全螢幕</button>
 
-        <!-- Header Navigation Bar -->
-        <div class="bg-purple-50/90 backdrop-blur-md px-5 py-3 flex items-center justify-between border-b border-purple-200/60 z-30 shrink-0">
-            <div class="flex items-center gap-2.5">
-                <span class="bg-gradient-to-r from-pink-400 to-purple-500 text-white p-2 rounded-xl shadow-lg shadow-purple-300/50 flex items-center justify-center">
-                    <i class="fa-solid fa-hourglass-half animate-spin-slow text-xs sm:text-sm"></i>
-                </span>
-                <div>
-                    <h4 class="text-purple-950 font-bold text-xs sm:text-sm tracking-wider uppercase">Time Travel Deck</h4>
-                    <span class="text-purple-700 text-[10px] sm:text-xs block leading-none font-bold">過去與現在的時光冒險</span>
-                </div>
+        <!-- Slides Wrapper -->
+        <div class="slide-window id="slideWindow">
+            
+            <!-- Slide 1: Title -->
+            <div class="slide active bg-pastel-pink">
+                <h1>The Grammar Time Machine</h1>
+                <span class="translation">文法時光機</span>
+                <p>Let's learn how actions change when we travel from the Present to the Past!</p>
+                <p style="font-size: 1.4rem; color: #777; margin-top: 10px;">讓我們一起學習當我們從現在穿越到過去時，動作會如何改變！</p>
             </div>
 
-            <div class="flex items-center gap-2">
-                <!-- Sound Synthesizer Controller -->
-                <button onclick="toggleSound()" id="soundBtn" class="bg-purple-100 hover:bg-purple-200 text-purple-800 p-2 rounded-xl transition duration-300 text-xs flex items-center gap-1.5 font-bold" title="Toggle sound effects">
-                    <i id="soundIcon" class="fa-solid fa-volume-high"></i>
-                    <span class="hidden sm:inline">Sound On</span>
-                </button>
-                
-                <!-- Fullscreen Toggle -->
-                <button onclick="toggleFullscreen()" id="fullscreenBtn" class="bg-purple-600 hover:bg-purple-500 text-white font-bold px-3 py-2 rounded-xl transition-all duration-300 text-xs flex items-center gap-1.5 shadow-lg shadow-purple-500/20 hover:scale-105 active:scale-95" title="Go Fullscreen">
-                    <i id="fullscreenIcon" class="fa-solid fa-expand"></i>
-                    <span id="fullscreenBtnSpan" class="hidden sm:inline">Fullscreen / 全螢幕</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- Main slide presentation deck view - uses vertical center alignment and inner auto scroll guards -->
-        <div class="flex-grow p-4 sm:p-6 md:p-8 z-10 overflow-y-auto slide-scroll flex items-center justify-center">
-
-            <!-- ================= SLIDE 1: WELCOME SCREEN ================= -->
-            <div id="slide1" class="slide-container slide-transition w-full flex-col items-center text-center space-y-4">
-                <div class="bg-amber-100 border border-amber-200 text-amber-900 px-4 py-1.5 rounded-full font-bold text-xs sm:text-sm shadow-sm animate-bounce flex items-center gap-1.5">
-                    <i class="fa-solid fa-shuttle-space"></i> Launching Adventure! <span class="text-[10px] sm:text-xs font-semibold text-amber-800">時光旅行太空船出發！</span>
-                </div>
-                <h1 class="font-display font-bold text-3xl sm:text-4xl md:text-5xl text-slate-900 leading-tight">
-                    Past vs. Present
-                    <span class="block text-xl sm:text-2xl md:text-3xl text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 font-bold mt-1">過去與現在：生活大探索</span>
-                </h1>
-                <p class="text-xs sm:text-sm md:text-base max-w-2xl text-slate-700 leading-relaxed mx-auto font-medium">
-                    Hop on our Time Machine and explore how toys, transport, and school have transformed!
-                    <span class="block text-purple-900 text-xs sm:text-sm font-bold mt-1.5 bg-purple-50/60 inline-block px-3 py-1 rounded-lg border border-purple-100">
-                        搭上神奇時光機，一起看看以前和現在的玩具、交通工具和學校生活有什麼不同吧！
-                    </span>
-                </p>
-                
-                <div class="w-full max-w-[280px] md:max-w-[340px] mx-auto pt-2">
-                    <svg viewBox="0 0 400 150" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full">
-                        <path d="M 40 130 Q 200 -20 360 130" stroke="url(#portalGrad)" stroke-width="12" fill="none" stroke-linecap="round" class="animate-pulse-slow"/>
-                        <defs>
-                            <linearGradient id="portalGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" stop-color="#ec4899" />
-                                <stop offset="50%" stop-color="#8b5cf6" />
-                                <stop offset="100%" stop-color="#3b82f6" />
-                            </linearGradient>
-                        </defs>
-                        <!-- Past Side Visual Node -->
-                        <g transform="translate(60, 105)">
-                            <circle cx="0" cy="0" r="26" fill="#fef3c7" stroke="#fbbf24" stroke-width="3"/>
-                            <path d="M -12 -8 L 12 -8 L 0 15 Z" fill="#d97706" stroke="#ffffff" stroke-width="1.5"/>
-                            <rect x="-14" y="-12" width="28" height="4" fill="#ea580c" rx="1.5"/>
-                            <circle cx="0" cy="-14" r="3" fill="#dc2626"/>
-                            <text x="0" y="38" fill="#92400e" font-size="11" font-weight="bold" text-anchor="middle">PAST / 過去</text>
-                        </g>
-                        <!-- Space Portal Comet Transit -->
-                        <circle cx="200" cy="35" r="7" fill="#8b5cf6" class="animate-pulse"/>
-                        <!-- Present Side Visual Node -->
-                        <g transform="translate(340, 105)">
-                            <circle cx="0" cy="0" r="26" fill="#ecfdf5" stroke="#34d399" stroke-width="3"/>
-                            <rect x="-12" y="-15" width="24" height="30" rx="3" fill="#06b6d4" stroke="#ffffff" stroke-width="1.5"/>
-                            <circle cx="0" cy="11" r="1.5" fill="#ffffff"/>
-                            <circle cx="0" cy="-3" r="4" fill="#fbbf24"/>
-                            <text x="0" y="38" fill="#065f46" font-size="11" font-weight="bold" text-anchor="middle">PRESENT / 現在</text>
-                        </g>
-                    </svg>
-                </div>
-            </div>
-
-            <!-- ================= SLIDE 2: TOYS & PLAYTIME ================= -->
-            <div id="slide2" class="slide-container slide-transition w-full hidden flex-col space-y-4">
-                <h2 class="font-display font-bold text-2xl sm:text-3xl text-slate-900 flex items-center gap-2">
-                    <span class="bg-pink-100 text-pink-700 p-2 rounded-xl text-sm sm:text-lg"><i class="fa-solid fa-gamepad"></i></span>
-                    <span>Toys & Playtime <span class="text-xs sm:text-lg text-pink-700 font-bold block sm:inline sm:ml-2">/ 玩具與遊戲時間</span></span>
-                </h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-                    <!-- Past Card (Light Amber Wooden Horse SVG) -->
-                    <div class="bg-amber-50/90 border-2 border-amber-200 rounded-2xl p-4 sm:p-5 bounce-hover flex flex-col justify-between space-y-3 shadow-sm">
-                        <div class="flex items-start justify-between gap-3">
-                            <div class="space-y-1">
-                                <span class="bg-amber-100 text-amber-800 text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full border border-amber-200">Retro Play</span>
-                                <h3 class="font-bold text-xl text-amber-900">The Past <span class="text-xs font-bold text-amber-700">/ 以前</span></h3>
-                                <p class="text-xs sm:text-sm text-slate-800 leading-relaxed font-medium">
-                                    Children long ago played with simple toys crafted from <strong>wood, clay, or fabric</strong>. They relied on active imaginations!
-                                </p>
-                            </div>
-                            <!-- Inline SVG Rocking Horse -->
-                            <div class="w-16 h-16 shrink-0 bg-white rounded-xl p-1.5 border border-amber-200 flex items-center justify-center">
-                                <svg viewBox="0 0 64 64" class="w-full h-full text-amber-700" fill="currentColor">
-                                    <path d="M48 24c0-3.3-2.7-6-6-6h-6l-2-6c-.5-1.5-2-2.5-3.6-2.5h-4.8c-1.6 0-3.1 1-3.6 2.5l-2 6H14c-3.3 0-6 2.7-6 6v8c0 3.3 2.7 6 6 6h2l-4 12c-.5 1.5.6 3 2.1 3h39.8c1.5 0 2.6-1.5 2.1-3l-4-12h2c3.3 0 6-2.7 6-6v-8zm-22-8.5l1.5-4.5h4.8l1.5 4.5h-7.8zM14 22h30c1.1 0 2 .9 2 2v6H12v-6c0-1.1.9-2 2-2zm2.1 26l3.3-10h23.2l3.3 10H16.1zM54 36c0 1.1-.9 2-2 2H12c-1.1 0-2-.9-2-2v-2h44v2z" />
-                                    <path d="M4 56q28 8 56 0" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none"/>
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="bg-amber-100/60 border border-amber-200 p-2.5 rounded-xl text-left">
-                            <span class="text-amber-950 text-[11px] sm:text-xs font-bold block leading-relaxed">
-                                以前的小朋友玩用木頭、黏土或布料手做的簡單玩具。全靠豐富想像力玩耍！
-                            </span>
-                        </div>
+            <!-- Slide 2: Introduction -->
+            <div class="slide bg-pastel-blue">
+                <h2>Present vs. Past</h2>
+                <span class="translation">現在式對比過去式</span>
+                <div class="grid-container">
+                    <div class="grid-card">
+                        <h3>Present (現在)</h3>
+                        <p>Happening <strong>now</strong> or regularly.</p>
+                        <p style="color:#777; font-size:1.2rem;">正在發生或規律發生的事。</p>
+                        <p>💡 Clue: <em>Today, Everyday</em></p>
                     </div>
-
-                    <!-- Present Card (Light Cyan Digital Game SVG) -->
-                    <div class="bg-cyan-50/90 border-2 border-cyan-200 rounded-2xl p-4 sm:p-5 bounce-hover flex flex-col justify-between space-y-3 shadow-sm">
-                        <div class="flex items-start justify-between gap-3">
-                            <div class="space-y-1">
-                                <span class="bg-cyan-100 text-cyan-800 text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full border border-cyan-200">Digital Era</span>
-                                <h3 class="font-bold text-xl text-cyan-900">The Present <span class="text-xs font-bold text-cyan-700">/ 現在</span></h3>
-                                <p class="text-xs sm:text-sm text-slate-800 leading-relaxed font-medium">
-                                    Today, we play with <strong>video consoles, robotic coding pets, and smart tablets</strong> with vibrant pixel graphics!
-                                </p>
-                            </div>
-                            <!-- Inline SVG Handheld Game Console -->
-                            <div class="w-16 h-16 shrink-0 bg-white rounded-xl p-1.5 border border-cyan-200 flex items-center justify-center">
-                                <svg viewBox="0 0 64 64" class="w-full h-full text-cyan-600" fill="currentColor">
-                                    <rect x="10" y="6" width="44" height="52" rx="6" stroke="currentColor" stroke-width="4" fill="none"/>
-                                    <rect x="16" y="12" width="32" height="22" rx="2" fill="currentColor" fill-opacity="0.1" stroke="currentColor" stroke-width="2"/>
-                                    <path d="M22 45h8M26 41v8M38 43a3 3 0 100-6 3 3 0 000 6zM44 49a3 3 0 100-6 3 3 0 000 6z" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="bg-cyan-100/60 border border-cyan-200 p-2.5 rounded-xl text-left">
-                            <span class="text-cyan-950 text-[11px] sm:text-xs font-bold block leading-relaxed">
-                                現在的我們玩電視遊戲機、程式設計機器人、還有彩色螢幕的平板！
-                            </span>
-                        </div>
+                    <div class="grid-card">
+                        <h3>Past (過去)</h3>
+                        <p>Already <strong>finished</strong> and done.</p>
+                        <p style="color:#777; font-size:1.2rem;">已經結束並完成的事。</p>
+                        <p>💡 Clue: <em>Yesterday, Last night</em></p>
                     </div>
                 </div>
             </div>
 
-            <!-- ================= STREAMING_CHUNK: Rendering Slide 3 (Classrooms) ================= -->
-            <!-- ================= SLIDE 3: CLASSROOMS & LEARNING ================= -->
-            <div id="slide3" class="slide-container slide-transition w-full hidden flex-col space-y-4">
-                <h2 class="font-display font-bold text-2xl sm:text-3xl text-slate-900 flex items-center gap-2">
-                    <span class="bg-amber-100 text-amber-700 p-2 rounded-xl text-sm sm:text-lg"><i class="fa-solid fa-school"></i></span>
-                    <span>Classrooms & Study <span class="text-xs sm:text-lg text-amber-800 font-bold block sm:inline sm:ml-2">/ 學校課堂與學習</span></span>
-                </h2>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-                    <!-- Retro Classroom (Ink Well & Quill Pen SVG) -->
-                    <div class="bg-amber-50/90 border-2 border-amber-200 rounded-2xl p-4 bounce-hover flex gap-3.5 items-center shadow-sm">
-                        <!-- Inline SVG Quill Ink Well -->
-                        <div class="w-16 h-16 shrink-0 bg-white rounded-xl p-2 border border-amber-200 flex items-center justify-center">
-                            <svg viewBox="0 0 64 64" class="w-full h-full text-amber-800" fill="currentColor">
-                                <path d="M12 40v12h16V40H12zm24-20c-2.2 0-4 1.8-4 4s1.8 4 4 4h16c2.2 0 4-1.8 4-4s-1.8-4-4-4H36z" opacity="0.2"/>
-                                <path d="M42 6L18 30l-4 14 14-4 24-24L42 6zM22 32l20-20 6 6-20 20-6-6z" stroke="currentColor" stroke-width="3" fill="none"/>
-                                <path d="M8 50h24v6H8z" stroke="currentColor" stroke-width="4"/>
-                            </svg>
-                        </div>
-                        <div class="space-y-1">
-                            <h3 class="font-bold text-lg text-amber-900">Classic Slate & Ink <span class="text-[10px] font-bold text-amber-700 block">/ 以前的教室與紙筆</span></h3>
-                            <p class="text-xs text-slate-800 leading-normal font-medium">
-                                Students wrote on blackboard slabs with chalk, or dipped fine metal quills into wet ink!
-                            </p>
-                            <p class="text-amber-950 text-[11px] font-bold border-t border-amber-200 pt-1 leading-tight">
-                                以前的同學在小黑板石板上寫字，或者用羽毛筆外加黑黑色墨水！
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Smart Classroom (Smart Touch Tablet SVG) -->
-                    <div class="bg-emerald-50/90 border-2 border-emerald-200 rounded-2xl p-4 bounce-hover flex gap-3.5 items-center shadow-sm">
-                        <!-- Inline SVG Interactive Screen -->
-                        <div class="w-16 h-16 shrink-0 bg-white rounded-xl p-2 border border-emerald-200 flex items-center justify-center">
-                            <svg viewBox="0 0 64 64" class="w-full h-full text-emerald-600" fill="currentColor">
-                                <rect x="8" y="12" width="48" height="32" rx="4" stroke="currentColor" stroke-width="4" fill="none"/>
-                                <path d="M24 44v8M40 44v8M18 52h28" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-                                <path d="M22 24l6 6 14-14" stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none"/>
-                            </svg>
-                        </div>
-                        <div class="space-y-1">
-                            <h3 class="font-bold text-lg text-emerald-900">Smart Touchscreens <span class="text-[10px] font-bold text-emerald-700 block">/ 現在的智慧課堂</span></h3>
-                            <p class="text-xs text-slate-800 leading-normal font-medium">
-                                Today's classrooms use interactive projectors and educational apps that turn science into a playground!
-                            </p>
-                            <p class="text-emerald-950 text-[11px] font-bold border-t border-emerald-200 pt-1 leading-tight">
-                                現在的教室有大大的觸控智慧白板，還能用平板玩有趣學習APP！
-                            </p>
-                        </div>
+            <!-- Slide 3: Animated Video Segment -->
+            <div class="slide bg-pastel-purple">
+                <h2>Time Machine Video</h2>
+                <span class="translation">時光機影片演示</span>
+                <div class="video-box">
+                    <div class="video-screen" id="videoScreen">🍿 Click Play to start the Time Machine!</div>
+                    <div class="video-controls">
+                        <button onclick="playVideoSegment(1)">▶️ Play: Present (現在)</button>
+                        <button onclick="playVideoSegment(2)">▶️ Play: Past (過去)</button>
                     </div>
                 </div>
             </div>
 
-            <!-- ================= STREAMING_CHUNK: Designing Slide 4 (Transport) ================= -->
-            <!-- ================= SLIDE 4: TRAVELING TO SCHOOL ================= -->
-            <div id="slide4" class="slide-container slide-transition w-full hidden flex-col space-y-4">
-                <h2 class="font-display font-bold text-2xl sm:text-3xl text-slate-900 flex items-center gap-2">
-                    <span class="bg-indigo-100 text-indigo-700 p-2 rounded-xl text-sm sm:text-lg"><i class="fa-solid fa-bus"></i></span>
-                    <span>Getting to School <span class="text-xs sm:text-lg text-indigo-700 font-bold block sm:inline sm:ml-2">/ 我們怎麼去上學？</span></span>
-                </h2>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center w-full">
-                    <div class="space-y-2.5">
-                        <div class="flex gap-3 items-center bg-amber-50/80 border border-amber-200 p-3 rounded-xl hover:bg-amber-100/80 transition shadow-sm">
-                            <div class="bg-amber-100 text-amber-700 p-2.5 rounded-lg shrink-0 border border-amber-200"><i class="fa-solid fa-person-walking text-lg"></i></div>
-                            <div>
-                                <h3 class="font-bold text-sm sm:text-base text-amber-900">Long Trails of the Past <span class="text-[10px] font-bold text-amber-700 block">/ 以前：走路或搭馬車</span></h3>
-                                <p class="text-xs text-slate-700 font-medium">Children walked miles over dirt paths or rode bumpy horse carriages.</p>
-                                <span class="text-amber-900 text-[11px] block font-bold mt-0.5">以前的小朋友走泥濘小路，或搭晃晃的慢馬車。</span>
-                            </div>
-                        </div>
-
-                        <div class="flex gap-3 items-center bg-cyan-50/80 border border-cyan-200 p-3 rounded-xl hover:bg-cyan-100/80 transition shadow-sm">
-                            <div class="bg-cyan-100 text-cyan-700 p-2.5 rounded-lg shrink-0 border border-cyan-200"><i class="fa-solid fa-bus-simple text-lg"></i></div>
-                            <div>
-                                <h3 class="font-bold text-sm sm:text-base text-cyan-900">Fast and Cozy Bus <span class="text-[10px] font-bold text-cyan-700 block">/ 現在：安全的黃色校車</span></h3>
-                                <p class="text-xs text-slate-700 font-medium">Today, electric buses or cars carry us directly to school safely.</p>
-                                <span class="text-cyan-950 text-[11px] block font-bold mt-0.5">現在有溫暖的大黃色校車、捷運或汽車接送。</span>
-                            </div>
-                        </div>
+            <!-- Slide 4: Regular Verb Examples -->
+            <div class="slide bg-pastel-green">
+                <h2>Regular Verbs (+ed)</h2>
+                <span class="translation">規則動詞（字尾加 ed）</span>
+                <div class="grid-container">
+                    <div class="grid-card">
+                        <h3>Today (Present)</h3>
+                        <p>I <span class="highlight-verb">walk</span> to school.</p>
+                        <p style="color:#777; font-size:1.2rem;">我走路去上學。</p>
+                        <hr style="margin:15px 0; border:0; border-top:1px solid #ddd;">
+                        <p>She <span class="highlight-verb">plays</span> games.</p>
+                        <p style="color:#777; font-size:1.2rem;">她玩遊戲。</p>
                     </div>
-
-                    <!-- Render Compact Vector Bus SVG -->
-                    <div class="bg-sky-50/50 rounded-2xl p-4 flex justify-center items-center h-32 sm:h-40 border border-indigo-200 shadow-inner">
-                        <svg viewBox="0 0 200 110" class="h-full max-w-full">
-                            <rect x="30" y="20" width="130" height="50" rx="10" fill="#f59e0b" stroke="#d97706" stroke-width="2"/>
-                            <rect x="145" y="35" width="22" height="35" rx="5" fill="#f59e0b" stroke="#d97706" stroke-width="2"/>
-                            <rect x="42" y="28" width="20" height="20" rx="3" fill="#38bdf8"/>
-                            <path d="M 42 28 L 52 48" stroke="#e0f2fe" stroke-width="1.5"/>
-                            <rect x="74" y="28" width="20" height="20" rx="3" fill="#38bdf8"/>
-                            <path d="M 74 28 L 84 48" stroke="#e0f2fe" stroke-width="1.5"/>
-                            <rect x="106" y="28" width="20" height="20" rx="3" fill="#38bdf8"/>
-                            <rect x="145" y="38" width="14" height="15" rx="2" fill="#1e293b"/>
-                            <circle cx="62" cy="78" r="14" fill="#1e293b" stroke="#475569" stroke-width="3"/>
-                            <circle cx="62" cy="78" r="5" fill="#cbd5e1"/>
-                            <circle cx="132" cy="78" r="14" fill="#1e293b" stroke="#475569" stroke-width="3"/>
-                            <circle cx="132" cy="78" r="5" fill="#cbd5e1"/>
-                        </svg>
+                    <div class="grid-card">
+                        <h3>Yesterday (Past)</h3>
+                        <p>I <span class="highlight-verb">walked</span> to school.</p>
+                        <p style="color:#777; font-size:1.2rem;">我昨天走路去上學。</p>
+                        <hr style="margin:15px 0; border:0; border-top:1px solid #ddd;">
+                        <p>She <span class="highlight-verb">played</span> games.</p>
+                        <p style="color:#777; font-size:1.2rem;">她昨天玩了遊戲。</p>
                     </div>
                 </div>
             </div>
 
-            <!-- ================= STREAMING_CHUNK: Designing Slide 5 (Communication) ================= -->
-            <!-- ================= SLIDE 5: COMMUNICATION ================= -->
-            <div id="slide5" class="slide-container slide-transition w-full hidden flex-col space-y-4">
-                <h2 class="font-display font-bold text-2xl sm:text-3xl text-slate-900 flex items-center gap-2">
-                    <span class="bg-violet-100 text-violet-700 p-2 rounded-xl text-sm sm:text-lg"><i class="fa-solid fa-comments"></i></span>
-                    <span>Talking to Friends <span class="text-xs sm:text-lg text-violet-700 font-bold block sm:inline sm:ml-2">/ 如何跟好朋友聯絡？</span></span>
-                </h2>
-
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full">
-                    <!-- Step 1 (Paper Envelope SVG) -->
-                    <div class="bg-amber-50/90 border-2 border-amber-200 rounded-2xl p-3 text-center flex flex-col justify-between space-y-2 hover:border-amber-300 transition shadow-sm">
-                        <div class="flex flex-col items-center">
-                            <!-- Inline Envelope SVG -->
-                            <div class="w-12 h-12 text-amber-600 mb-1">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-full h-full">
-                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                                    <polyline points="22,6 12,13 2,6"/>
-                                </svg>
-                            </div>
-                            <h3 class="font-bold text-base text-amber-900">1. Paper Mail <span class="text-[10px] font-bold block text-amber-700">/ 手寫紙本信件</span></h3>
-                            <p class="text-[11px] text-slate-800 font-medium leading-tight mt-1">Carriers traveled by foot or horseback to deliver them over weeks!</p>
-                        </div>
-                        <span class="text-amber-950 text-[10px] font-bold block border-t border-amber-200 pt-1.5">以前寫在信紙上，由郵差寄送要好幾十天。</span>
+            <!-- Slide 5: Irregular Verb Examples -->
+            <div class="slide bg-pastel-yellow">
+                <h2>Irregular Rebels!</h2>
+                <span class="translation">不規則變形動詞！</span>
+                <div class="grid-container">
+                    <div class="grid-card">
+                        <h3>Present (Every day)</h3>
+                        <p>We <span class="highlight-verb">eat</span> apples.</p>
+                        <p style="color:#777; font-size:1.2rem;">我們吃蘋果。</p>
+                        <hr style="margin:15px 0; border:0; border-top:1px solid #ddd;">
+                        <p>They <span class="highlight-verb">run</span> fast.</p>
+                        <p style="color:#777; font-size:1.2rem;">他們跑很快。</p>
                     </div>
-
-                    <!-- Step 2 (Retro Phone SVG) -->
-                    <div class="bg-fuchsia-50/90 border-2 border-fuchsia-200 rounded-2xl p-3 text-center flex flex-col justify-between space-y-2 hover:border-fuchsia-300 transition shadow-sm">
-                        <div class="flex flex-col items-center">
-                            <!-- Inline Rotary Phone SVG -->
-                            <div class="w-12 h-12 text-fuchsia-600 mb-1">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-full h-full">
-                                    <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
-                                </svg>
-                            </div>
-                            <h3 class="font-bold text-base text-fuchsia-900">2. Rotary Phone <span class="text-[10px] font-bold block text-fuchsia-700">/ 轉盤電話</span></h3>
-                            <p class="text-[11px] text-slate-800 font-medium leading-tight mt-1">Heavy devices sat in living rooms. You could only hear voice, no texting!</p>
-                        </div>
-                        <span class="text-fuchsia-950 text-[10px] font-bold block border-t border-fuchsia-200 pt-1.5">後來有了重重的轉盤電話，只能通話不能打字！</span>
+                    <div class="grid-card">
+                        <h3>Past (Last week)</h3>
+                        <p>We <span class="highlight-verb">ate</span> apples.</p>
+                        <p style="color:#777; font-size:1.2rem;">我們上週吃了蘋果。</p>
+                        <hr style="margin:15px 0; border:0; border-top:1px solid #ddd;">
+                        <p>They <span class="highlight-verb">ran</span> fast.</p>
+                        <p style="color:#777; font-size:1.2rem;">他們之前跑很快。</p>
                     </div>
-
-                    <!-- Step 3 (Video Phone Call SVG) -->
-                    <div class="bg-cyan-50/90 border-2 border-cyan-200 rounded-2xl p-3 text-center flex flex-col justify-between space-y-2 hover:border-cyan-300 transition shadow-sm">
-                        <div class="flex flex-col items-center">
-                            <!-- Inline Video Call Screen SVG -->
-                            <div class="w-12 h-12 text-cyan-600 mb-1">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-full h-full">
-                                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
-                                    <path d="M12 18h.01"/>
-                                    <circle cx="12" cy="10" r="3"/>
-                                </svg>
-                            </div>
-                            <h3 class="font-bold text-base text-cyan-900">3. Video Chat <span class="text-[10px] font-bold block text-cyan-700">/ 即時網路視訊</span></h3>
-                            <p class="text-[11px] text-slate-800 font-medium leading-tight mt-1">Instantly dial high-definition video calls with friends worldwide!</p>
-                        </div>
-                        <span class="text-cyan-950 text-[10px] font-bold block border-t border-cyan-200 pt-1.5">現在隨時用手機開視訊，一秒見到全世界的朋友！</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ================= STREAMING_CHUNK: Designing Theater Slide 6 ================= -->
-            <!-- ================= SLIDE 6: INTERACTIVE TIMELINE ANIMATOR (THE MOVIE) ================= -->
-            <div id="slide6" class="slide-container slide-transition w-full hidden flex-col space-y-3">
-                <div class="flex items-center justify-between">
-                    <h2 class="font-display font-bold text-xl sm:text-2xl text-slate-900 flex items-center gap-2">
-                        <span class="bg-red-100 text-red-700 p-1.5 rounded-lg animate-pulse text-xs sm:text-base"><i class="fa-solid fa-clapperboard"></i></span>
-                        <span>Time Machine Theater <span class="text-xs sm:text-base text-red-700 font-bold block sm:inline sm:ml-2">/ 時光倒流電影院</span></span>
-                    </h2>
-                </div>
-
-                <!-- Cinematic Movie Player Container -->
-                <div class="bg-purple-100/60 rounded-2xl p-3 flex flex-col border-4 border-purple-200 shadow-lg w-full max-w-2xl mx-auto overflow-hidden">
-                    
-                    <!-- Split-Screen Movie Screen Stage -->
-                    <div class="grid grid-cols-2 gap-1.5 h-32 sm:h-44 rounded-xl overflow-hidden relative border-2 border-purple-200">
-                        
-                        <!-- Left Side: Retro Past Screen -->
-                        <div id="retroMovieScreen" class="bg-amber-50/90 flex flex-col items-center justify-center relative p-1">
-                            <span class="absolute top-1.5 left-1.5 text-[9px] font-bold text-amber-900 bg-amber-100/80 px-2 py-0.5 rounded border border-amber-200">PAST (1920)</span>
-                            <div class="flex flex-col items-center justify-center space-y-1 h-full">
-                                <div id="movieRetroIcon" class="text-4xl sm:text-5xl transition-transform duration-300">🪵</div>
-                                <div id="movieRetroLabel" class="text-[9px] sm:text-[11px] text-amber-950 font-bold bg-amber-100/90 px-2.5 py-0.5 rounded-full border border-amber-200/50">Wooden Blocks</div>
-                            </div>
-                        </div>
-
-                        <!-- Right Side: Digital Present Screen -->
-                        <div id="modernMovieScreen" class="bg-cyan-50/90 flex flex-col items-center justify-center relative p-1">
-                            <span class="absolute top-1.5 right-1.5 text-[9px] font-bold text-cyan-900 bg-cyan-100/80 px-2 py-0.5 rounded border border-cyan-200">PRESENT (2026)</span>
-                            <div class="flex flex-col items-center justify-center space-y-1 h-full">
-                                <div id="movieModernIcon" class="text-4xl sm:text-5xl transition-transform duration-300">🎮</div>
-                                <div id="movieModernLabel" class="text-[9px] sm:text-[11px] text-cyan-950 font-bold bg-cyan-100/90 px-2.5 py-0.5 rounded-full border border-cyan-200/50">Game Console</div>
-                            </div>
-                        </div>
-
-                        <!-- Center Portal Swirling Divider -->
-                        <div class="absolute inset-y-0 left-1/2 -ml-0.5 bg-gradient-to-b from-purple-400 via-pink-400 to-cyan-400 w-1 z-10 shadow-[0_0_8px_rgba(168,85,247,0.4)]"></div>
-                    </div>
-
-                    <!-- Movie Playback controls bar -->
-                    <div class="flex flex-col sm:flex-row items-center justify-between w-full mt-2 gap-2">
-                        <div class="flex items-center gap-2">
-                            <button id="moviePlayBtn" onclick="toggleMoviePlayback()" class="bg-red-500 hover:bg-red-600 text-white font-bold px-3 py-1.5 rounded-lg text-[10px] sm:text-xs flex items-center gap-1.5 transition-all active:scale-95 shadow-md">
-                                <i id="moviePlayIcon" class="fa-solid fa-play"></i> <span id="moviePlayText">Play Movie / 播放</span>
-                            </button>
-                            <span id="movieStatusMsg" class="text-[10px] sm:text-xs text-purple-900 font-bold">Ready / 準備放映</span>
-                        </div>
-
-                        <!-- Scrubber progress slider -->
-                        <div class="flex-grow flex items-center gap-1.5 w-full sm:w-auto px-1">
-                            <input type="range" id="movieScrubber" min="0" max="100" value="0" class="flex-grow accent-purple-600 cursor-pointer h-1.5 rounded-lg bg-purple-200" oninput="scrubMovie(this.value)">
-                        </div>
-
-                        <!-- Scene Selector -->
-                        <div class="flex items-center gap-1 shrink-0 bg-white border-2 border-purple-200 p-0.5 rounded-lg">
-                            <button onclick="changeMovieScene(0)" id="sceneBtn0" class="px-2.5 py-0.5 rounded text-[10px] font-bold bg-purple-600 text-white transition">Toys</button>
-                            <button onclick="changeMovieScene(1)" id="sceneBtn1" class="px-2.5 py-0.5 rounded text-[10px] font-bold text-purple-700 hover:text-purple-900 transition">School</button>
-                            <button onclick="changeMovieScene(2)" id="sceneBtn2" class="px-2.5 py-0.5 rounded text-[10px] font-bold text-purple-700 hover:text-purple-900 transition">Transport</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ================= STREAMING_CHUNK: Designing Quiz Slide 7 ================= -->
-            <!-- ================= SLIDE 7: INTERACTIVE QUIZ ================= -->
-            <div id="slide7" class="slide-container slide-transition w-full hidden flex-col space-y-3">
-                <div class="flex items-center justify-between">
-                    <h2 class="font-display font-bold text-xl sm:text-2xl text-slate-900 flex items-center gap-2">
-                        <span class="bg-emerald-100 text-emerald-700 p-1.5 rounded-lg text-xs sm:text-base"><i class="fa-solid fa-circle-question"></i></span>
-                        <span>Time Traveler Quiz! <span class="text-xs sm:text-base text-emerald-800 font-bold block sm:inline sm:ml-2">/ 時光旅行小挑戰</span></span>
-                    </h2>
-                    <span id="scoreText" class="bg-emerald-100 text-emerald-800 font-bold text-xs px-3 py-1 rounded-full border-2 border-emerald-200">
-                        Score / 得分: 0
-                    </span>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full">
-                    <!-- Question 1 -->
-                    <div class="flex flex-col justify-between bg-purple-50/60 border border-purple-200 rounded-xl p-3 gap-1.5 shadow-sm">
-                        <span class="text-slate-900 font-bold text-xs sm:text-sm leading-tight flex flex-col">
-                            <span>📝 Quill Pen & Paper Letter</span>
-                            <span class="text-purple-800 text-[10px] sm:text-xs">羽毛筆與紙本信件</span>
-                        </span>
-                        <div class="flex gap-1.5">
-                            <button onclick="answerQuiz(this, 'past', 1)" class="flex-1 py-1.5 text-xs font-bold rounded-lg bg-white hover:bg-purple-100/50 text-purple-950 border border-purple-200 transition">Past (過去)</button>
-                            <button onclick="answerQuiz(this, 'present', 1)" class="flex-1 py-1.5 text-xs font-bold rounded-lg bg-white hover:bg-purple-100/50 text-purple-950 border border-purple-200 transition">Present (現在)</button>
-                        </div>
-                    </div>
-
-                    <!-- Question 2 -->
-                    <div class="flex flex-col justify-between bg-purple-50/60 border border-purple-200 rounded-xl p-3 gap-1.5 shadow-sm">
-                        <span class="text-slate-900 font-bold text-xs sm:text-sm leading-tight flex flex-col">
-                            <span>📱 iPad & Smart Tablet</span>
-                            <span class="text-purple-800 text-[10px] sm:text-xs">智慧平板電腦</span>
-                        </span>
-                        <div class="flex gap-1.5">
-                            <button onclick="answerQuiz(this, 'past', 2)" class="flex-1 py-1.5 text-xs font-bold rounded-lg bg-white hover:bg-purple-100/50 text-purple-950 border border-purple-200 transition">Past (過去)</button>
-                            <button onclick="answerQuiz(this, 'present', 2)" class="flex-1 py-1.5 text-xs font-bold rounded-lg bg-white hover:bg-purple-100/50 text-purple-950 border border-purple-200 transition">Present (現在)</button>
-                        </div>
-                    </div>
-
-                    <!-- Question 3 -->
-                    <div class="flex flex-col justify-between bg-purple-50/60 border border-purple-200 rounded-xl p-3 gap-1.5 shadow-sm">
-                        <span class="text-slate-900 font-bold text-xs sm:text-sm leading-tight flex flex-col">
-                            <span>🐴 Wooden Carriage & Horses</span>
-                            <span class="text-purple-800 text-[10px] sm:text-xs">載客木頭馬車</span>
-                        </span>
-                        <div class="flex gap-1.5">
-                            <button onclick="answerQuiz(this, 'past', 3)" class="flex-1 py-1.5 text-xs font-bold rounded-lg bg-white hover:bg-purple-100/50 text-purple-950 border border-purple-200 transition">Past (過去)</button>
-                            <button onclick="answerQuiz(this, 'present', 3)" class="flex-1 py-1.5 text-xs font-bold rounded-lg bg-white hover:bg-purple-100/50 text-purple-950 border border-purple-200 transition">Present (現在)</button>
-                        </div>
-                    </div>
-
-                    <!-- Question 4 -->
-                    <div class="flex flex-col justify-between bg-purple-50/60 border border-purple-200 rounded-xl p-3 gap-1.5 shadow-sm">
-                        <span class="text-slate-900 font-bold text-xs sm:text-sm leading-tight flex flex-col">
-                            <span>🚌 High-Speed Smart Train</span>
-                            <span class="text-purple-800 text-[10px] sm:text-xs">高速智慧列車</span>
-                        </span>
-                        <div class="flex gap-1.5">
-                            <button onclick="answerQuiz(this, 'past', 4)" class="flex-1 py-1.5 text-xs font-bold rounded-lg bg-white hover:bg-purple-100/50 text-purple-950 border border-purple-200 transition">Past (過去)</button>
-                            <button onclick="answerQuiz(this, 'present', 4)" class="flex-1 py-1.5 text-xs font-bold rounded-lg bg-white hover:bg-purple-100/50 text-purple-950 border border-purple-200 transition">Present (現在)</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ================= SLIDE 8: Q&A DISCUSSION ================= -->
-            <div id="slide8" class="slide-container slide-transition w-full hidden flex-col items-center text-center space-y-4">
-                <div class="text-amber-500 text-5xl animate-bounce-slow"><i class="fa-solid fa-comments"></i></div>
-                <h1 class="font-display font-bold text-2xl sm:text-3xl text-slate-900">
-                    Any Questions?
-                    <span class="block text-lg sm:text-xl text-purple-800 font-bold mt-1">大家有沒有問題呢？</span>
-                </h1>
-                <p class="text-xs sm:text-sm max-w-lg text-slate-800 leading-relaxed mx-auto font-medium">
-                    What was your favorite Past vs. Present discovery today? Let's talk about it together!
-                    <span class="block text-amber-900 font-bold mt-2 bg-amber-50 border border-amber-200 inline-block px-3 py-1.5 rounded-xl">
-                        今天哪一個「過去與現在」的大轉變最讓你覺得神奇呢？跟好朋友分享看看吧！
-                    </span>
-                </p>
-                <div class="mt-2 px-5 py-2.5 bg-pink-50 border-2 border-dashed border-pink-200 rounded-2xl inline-block shadow-inner">
-                    <p class="font-bold text-xs sm:text-sm text-pink-950 m-0 flex items-center justify-center gap-1.5">
-                        <i class="fa-solid fa-microphone text-pink-600 animate-pulse"></i> Let's Share our Thoughts! <span class="text-pink-700">/ 心得分享時間</span>
-                    </p>
                 </div>
             </div>
 
         </div>
 
-        <!-- Foot Navigation Bar (Locked strictly at the bottom) -->
-        <div class="bg-purple-50/95 backdrop-blur-md border-t border-purple-200 p-3 flex items-center justify-between gap-3 z-20 shrink-0">
-            <!-- Back Button -->
-            <button id="prevBtn" onclick="changeSlide(-1)" class="bg-white hover:bg-purple-100 text-purple-900 hover:text-purple-950 font-bold px-4 py-2.5 rounded-xl text-xs sm:text-sm flex items-center gap-1 transition active:scale-95 disabled:opacity-35 disabled:pointer-events-none border border-purple-200 shadow-sm">
-                <i class="fa-solid fa-arrow-left"></i> Previous <span class="text-[10px] font-normal">/ 上一頁</span>
-            </button>
-
-            <!-- Navigation Dots -->
-            <div id="slideIndicatorContainer" class="flex gap-1.5 justify-center items-center py-1">
-                <!-- Javascript will load indicator points here -->
-            </div>
-
-            <!-- Next Button -->
-            <button id="nextBtn" onclick="changeSlide(1)" class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold px-4 py-2.5 rounded-xl text-xs sm:text-sm flex items-center gap-1 transition active:scale-95 disabled:opacity-35 disabled:pointer-events-none shadow-lg shadow-pink-200">
-                Next <span class="text-[10px] font-normal text-purple-50">/ 下一頁</span> <i class="fa-solid fa-arrow-right"></i>
-            </button>
+        <!-- Footer Navigation -->
+        <div class="controls-footer">
+            <button id="prevBtn" class="btn-nav" onclick="changeSlide(-1)">◀ Previous / 上一頁</button>
+            <div class="slide-indicator" id="slideNum">Slide 1 / 5</div>
+            <button id="nextBtn" class="btn-nav" onclick="changeSlide(1)">Next / 下一頁 ▶</button>
         </div>
-    </div>
 
-    <!-- HINT BAR FOR DESKTOPS -->
-    <div class="absolute bottom-1.5 text-slate-500 text-[10px] text-center font-bold hidden md:block">
-        💡 Keyboard Keys: Left/Right Arrow Keys or Spacebar to flip slides easily!
     </div>
 
     <script>
-        let currentSlide = 1;
-        const totalSlides = 8;
-        let soundEnabled = true;
-        let score = 0;
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const slideNumIndicator = document.getElementById('slideNum');
 
-        // Correct Answers for the Kids Quiz
-        const quizAnswers = {
-            1: 'past',
-            2: 'present',
-            3: 'past',
-            4: 'present'
-        };
-
-        // Web Audio Synth for feedback sounds
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        
-        function playBeep(frequency, duration, type = 'sine') {
-            if (!soundEnabled) return;
-            try {
-                if (audioCtx.state === 'suspended') {
-                    audioCtx.resume();
+        function updateSlideDisplay() {
+            slides.forEach((slide, index) => {
+                if(index === currentSlide) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
                 }
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                
-                osc.type = type;
-                osc.frequency.value = frequency;
-                
-                gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-                
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                
-                osc.start();
-                osc.stop(audioCtx.currentTime + duration);
-            } catch (err) {
-                console.warn('Audio failed: ', err);
-            }
-        }
-
-        function toggleSound() {
-            soundEnabled = !soundEnabled;
-            const icon = document.getElementById('soundIcon');
-            const btnText = document.querySelector('#soundBtn span');
-            if (soundEnabled) {
-                icon.className = 'fa-solid fa-volume-high';
-                btnText.textContent = 'Sound On';
-                playBeep(440, 0.15, 'triangle');
-            } else {
-                icon.className = 'fa-solid fa-volume-xmark';
-                btnText.textContent = 'Muted';
-            }
-        }
-
-        // Render Navigation dots
-        function renderDots() {
-            const container = document.getElementById('slideIndicatorContainer');
-            if (!container) return;
-            container.innerHTML = '';
-            for (let i = 1; i <= totalSlides; i++) {
-                const dot = document.createElement('button');
-                dot.className = `w-2 h-2 rounded-full transition-all duration-300 focus:outline-none ${i === currentSlide ? 'bg-purple-600 w-6' : 'bg-purple-200 hover:bg-purple-300'}`;
-                dot.setAttribute('title', `Slide ${i}`);
-                dot.onclick = () => {
-                    currentSlide = i;
-                    updateSlides();
-                    playBeep(523, 0.08, 'triangle');
-                };
-                container.appendChild(dot);
-            }
-        }
-
-        function updateSlides() {
-            // Step 1: Hide all containers and reset transition states
-            for (let i = 1; i <= totalSlides; i++) {
-                const slide = document.getElementById(`slide${i}`);
-                if (slide) {
-                    slide.classList.add('hidden');
-                    slide.classList.remove('flex');
-                    slide.style.opacity = '0';
-                    slide.style.transform = 'translateY(12px)';
-                }
-            }
-
-            // Step 2: Set the targeted slide to active
-            const activeSlide = document.getElementById(`slide${currentSlide}`);
-            if (activeSlide) {
-                activeSlide.classList.remove('hidden');
-                activeSlide.classList.add('flex');
-                
-                // CRITICAL FIX: Void access forces browser reflow, forcing it to paint 'display: flex' 
-                // BEFORE the transition opacity triggers. This prevents the white screen bug!
-                void activeSlide.offsetHeight;
-
-                // Step 3: Trigger the clean fluid transition animation
-                activeSlide.style.opacity = '1';
-                activeSlide.style.transform = 'translateY(0px)';
-            }
-
-            // Update footer controls
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
-            if (prevBtn) prevBtn.disabled = (currentSlide === 1);
-            if (nextBtn) nextBtn.disabled = (currentSlide === totalSlides);
-
-            renderDots();
-
-            if (currentSlide !== 6) {
-                stopMoviePlayback();
-            }
+            });
+            slideNumIndicator.innerText = `Slide ${currentSlide + 1} / ${slides.length}`;
+            
+            // Disable buttons if at boundaries
+            document.getElementById('prevBtn').style.opacity = currentSlide === 0 ? "0.5" : "1";
+            document.getElementById('nextBtn').style.opacity = currentSlide === slides.length - 1 ? "0.5" : "1";
         }
 
         function changeSlide(direction) {
-            currentSlide += direction;
-            if (currentSlide < 1) currentSlide = 1;
-            if (currentSlide > totalSlides) currentSlide = totalSlides;
-            updateSlides();
-            playBeep(direction > 0 ? 587 : 494, 0.08, 'sine');
+            let target = currentSlide + direction;
+            if(target >= 0 && target < slides.length) {
+                currentSlide = target;
+                updateSlideDisplay();
+                // Reset video text when leaving slide 3
+                if(currentSlide !== 2) {
+                    document.getElementById('videoScreen').innerHTML = "🍿 Click Play to start the Time Machine!";
+                    document.getElementById('videoScreen').style.color = "white";
+                }
+            }
         }
 
-        // Fullscreen Mode with sandbox/iframe virtual layout fallbacks
+        // Fullscreen Toggle
         function toggleFullscreen() {
-            const container = document.getElementById('presentationContainer');
-            const icon = document.getElementById('fullscreenIcon');
-            const btnSpan = document.getElementById('fullscreenBtnSpan');
-            const isCurrentlyVirtual = container.classList.contains('is-virtual-fullscreen');
-
-            if (isCurrentlyVirtual) {
-                container.classList.remove('is-virtual-fullscreen');
-                if (icon) icon.className = 'fa-solid fa-expand';
-                if (btnSpan) btnSpan.textContent = 'Fullscreen / 全螢幕';
-                playBeep(659, 0.12, 'sine');
-                return;
-            }
-
             if (!document.fullscreenElement) {
-                container.requestFullscreen().then(() => {
-                    if (icon) icon.className = 'fa-solid fa-compress';
-                    if (btnSpan) btnSpan.textContent = 'Exit / 退出';
-                    playBeep(784, 0.15, 'sine');
-                }).catch(err => {
-                    // Fallback to beautiful virtual fullscreen mock if browser sandbox blocks the API
-                    container.classList.add('is-virtual-fullscreen');
-                    if (icon) icon.className = 'fa-solid fa-compress';
-                    if (btnSpan) btnSpan.textContent = 'Exit / 退出';
-                    playBeep(784, 0.15, 'sine');
+                document.documentElement.requestFullscreen().catch(err => {
+                    alert(`Error trying to enable fullscreen: ${err.message}`);
                 });
             } else {
-                document.exitFullscreen().catch(() => {});
-                if (icon) icon.className = 'fa-solid fa-expand';
-                if (btnSpan) btnSpan.textContent = 'Fullscreen / 全螢幕';
-                playBeep(659, 0.12, 'sine');
+                document.exitFullscreen();
             }
         }
 
-        document.addEventListener('fullscreenchange', () => {
-            const container = document.getElementById('presentationContainer');
-            const icon = document.getElementById('fullscreenIcon');
-            const btnSpan = document.getElementById('fullscreenBtnSpan');
-            
-            if (!document.fullscreenElement) {
-                container.classList.remove('is-virtual-fullscreen');
-                if (icon) icon.className = 'fa-solid fa-expand';
-                if (btnSpan) btnSpan.textContent = 'Fullscreen / 全螢幕';
-            } else {
-                if (icon) icon.className = 'fa-solid fa-compress';
-                if (btnSpan) btnSpan.textContent = 'Exit / 退出';
+        // Animated Video Text Simulation
+        function playVideoSegment(type) {
+            const screen = document.getElementById('videoScreen');
+            if(type === 1) {
+                screen.style.color = "#bbdefb";
+                screen.innerHTML = "🌀 TIME TRAVEL ACTIVE...<br><br>⚡ PRESENT DETECTIVE ⚡<br>『 Right now, I <span style='text-decoration:underline; font-weight:bold;'>JUMP</span> on the trampoline! 』";
+            } else if(type === 2) {
+                screen.style.color = "#ffcdd2";
+                screen.innerHTML = "⏰ REWINDING CLOCK...<br><br>🍂 PAST DETECTIVE 🍂<br>『 Yesterday, I <span style='text-decoration:underline; font-weight:bold; color:#ff8a80;'>JUMPED</span> into the mud! 』";
             }
+        }
+
+        // Keypress shortcuts (Left/Right arrows)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') changeSlide(1);
+            if (e.key === 'ArrowLeft') changeSlide(-1);
         });
 
-        // Keyboard Support
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight' || e.key === ' ') {
-                e.preventDefault();
-                if (currentSlide < totalSlides) changeSlide(1);
-            } else if (e.key === 'ArrowLeft') {
-                e.preventDefault();
-                if (currentSlide > 1) changeSlide(-1);
-            }
-        });
-
-        // Touch Swipe Gesture Support
-        let touchstartX = 0;
-        let touchendX = 0;
-        document.addEventListener('touchstart', e => {
-            touchstartX = e.changedTouches[0].screenX;
-        }, { passive: true });
-        document.addEventListener('touchend', e => {
-            touchendX = e.changedTouches[0].screenX;
-            const diff = touchstartX - touchendX;
-            if (Math.abs(diff) > 50) {
-                if (diff > 0 && currentSlide < totalSlides) changeSlide(1);
-                if (diff < 0 && currentSlide > 1) changeSlide(-1);
-            }
-        }, { passive: true });
-
-        const movieScenes = [
-            {
-                retroIcon: "🪵", retroLabel: "Wooden Toy Blocks / 積木",
-                modernIcon: "🎮", modernLabel: "Game Console / 遊戲機"
-            },
-            {
-                retroIcon: "📜", retroLabel: "Slate & Chalk / 石板與粉筆",
-                modernIcon: "💻", modernLabel: "Touch Tablet / 智慧型平板"
-            },
-            {
-                retroIcon: "🐴", retroLabel: "Horse Carriage / 載客馬車",
-                modernIcon: "🚀", modernLabel: "Futuristic Spaceship / 未來太空船"
-            }
-        ];
-
-        let activeSceneIndex = 0;
-        let moviePlaying = false;
-        let movieProgress = 0;
-        let movieInterval = null;
-
-        function changeMovieScene(index) {
-            activeSceneIndex = index;
-            for (let i = 0; i < 3; i++) {
-                const btn = document.getElementById(`sceneBtn${i}`);
-                if (btn) {
-                    if (i === index) {
-                        btn.className = "px-2.5 py-0.5 rounded text-[10px] font-bold bg-purple-600 text-white transition";
-                    } else {
-                        btn.className = "px-2.5 py-0.5 rounded text-[10px] font-bold text-purple-700 hover:text-purple-900 transition";
-                    }
-                }
-            }
-            document.getElementById('movieRetroIcon').innerText = movieScenes[activeSceneIndex].retroIcon;
-            document.getElementById('movieRetroLabel').innerText = movieScenes[activeSceneIndex].retroLabel;
-            document.getElementById('movieModernIcon').innerText = movieScenes[activeSceneIndex].modernIcon;
-            document.getElementById('movieModernLabel').innerText = movieScenes[activeSceneIndex].modernLabel;
-            playBeep(523, 0.1, 'sine');
-        }
-
-        function toggleMoviePlayback() {
-            const playIcon = document.getElementById('moviePlayIcon');
-            const playBtnText = document.getElementById('moviePlayText');
-            const statusMsg = document.getElementById('movieStatusMsg');
-
-            if (moviePlaying) {
-                stopMoviePlayback();
-            } else {
-                moviePlaying = true;
-                if (playIcon) playIcon.className = "fa-solid fa-pause";
-                if (playBtnText) playBtnText.textContent = "Pause / 暫停";
-                if (statusMsg) {
-                    statusMsg.textContent = "Playing... / 放映中";
-                    statusMsg.className = "text-[10px] sm:text-xs text-red-600 font-bold animate-pulse";
-                }
-                playBeep(180, 0.4, 'triangle');
-
-                movieInterval = setInterval(() => {
-                    movieProgress += 1;
-                    if (movieProgress > 100) {
-                        movieProgress = 0;
-                        activeSceneIndex = (activeSceneIndex + 1) % movieScenes.length;
-                        changeMovieScene(activeSceneIndex);
-                    }
-                    const scrubber = document.getElementById('movieScrubber');
-                    if (scrubber) scrubber.value = movieProgress;
-                    animateMovieFrame();
-                }, 130);
-            }
-        }
-
-        function stopMoviePlayback() {
-            moviePlaying = false;
-            clearInterval(movieInterval);
-            const playIcon = document.getElementById('moviePlayIcon');
-            const playBtnText = document.getElementById('moviePlayText');
-            const statusMsg = document.getElementById('movieStatusMsg');
-            
-            if (playIcon) playIcon.className = "fa-solid fa-play";
-            if (playBtnText) playBtnText.textContent = "Play Movie / 播放";
-            if (statusMsg) {
-                statusMsg.textContent = "Paused / 已暫停";
-                statusMsg.className = "text-[10px] sm:text-xs text-purple-900 font-bold";
-            }
-        }
-
-        function scrubMovie(val) {
-            movieProgress = parseInt(val);
-            animateMovieFrame();
-        }
-
-        function animateMovieFrame() {
-            const retroFrame = document.getElementById('movieRetroIcon');
-            const modernFrame = document.getElementById('movieModernIcon');
-            if (retroFrame && modernFrame) {
-                const factor = Math.sin((movieProgress / 100) * Math.PI * 4);
-                const scale = 1 + (factor * 0.1);
-                const rot = factor * 6;
-                retroFrame.style.transform = `scale(${scale}) rotate(${-rot}deg)`;
-                modernFrame.style.transform = `scale(${scale}) rotate(${rot}deg)`;
-            }
-            if (movieProgress % 10 === 0) {
-                playBeep(240, 0.02, 'sine');
-            }
-        }
-
-        function answerQuiz(button, choice, qId) {
-            const correctAnswer = quizAnswers[qId];
-            const siblingBtns = button.parentNode.querySelectorAll('button');
-            
-            siblingBtns.forEach(btn => {
-                btn.className = "flex-1 py-1.5 text-xs font-bold rounded-lg bg-purple-50 text-slate-400 border border-purple-200 pointer-events-none transition";
-            });
-
-            if (choice === correctAnswer) {
-                button.className = "flex-1 py-1.5 text-xs font-bold rounded-lg bg-gradient-to-r from-emerald-500 to-green-600 text-white border border-emerald-500 transition shadow-md shadow-emerald-500/10";
-                button.innerHTML = "Correct! (正確) 🎉";
-                score += 25;
-                document.getElementById('scoreText').textContent = `Score / 得分: ${score}`;
-                playBeep(523, 0.08, 'sine');
-                setTimeout(() => playBeep(659, 0.08, 'sine'), 60);
-                setTimeout(() => playBeep(784, 0.2, 'sine'), 120);
-            } else {
-                button.className = "flex-1 py-1.5 text-xs font-bold rounded-lg bg-rose-500 text-white border border-rose-500 transition shadow-md shadow-rose-500/10";
-                button.innerHTML = "Oops! 🥺";
-                playBeep(290, 0.25, 'sawtooth');
-
-                setTimeout(() => {
-                    siblingBtns.forEach(btn => {
-                        btn.className = "flex-1 py-1.5 text-xs font-bold rounded-lg bg-white hover:bg-purple-100/50 text-purple-950 border border-purple-200 transition";
-                        btn.innerHTML = btn.innerHTML.includes('Past') ? 'Past (過去)' : 'Present (現在)';
-                    });
-                }, 1400);
-            }
-        }
-
-        // Initialize presentation on window loaded state
-        window.onload = function() {
-            updateSlides();
-        }
+        // Initialize view
+        updateSlideDisplay();
     </script>
 </body>
 </html>
