@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Past and Present Verbs / 過去式與現在式動詞變化</title>
+    <title>Past and Present Verbs / 過去與現在式動詞</title>
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Helvetica Neue', Arial, 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
         }
 
         body, html {
             height: 100%;
             overflow: hidden;
-            background-color: #f7f9fc;
+            background-color: #f0f4f8;
         }
 
-        /* Fixed Fullscreen Container to prevent scrolling */
+        /* Fixed Fullscreen Container to prevent vertical scrolling */
         .presentation-container {
             width: 100vw;
             height: 100vh;
@@ -34,21 +34,21 @@
             display: flex;
             justify-content: flex-end;
             position: absolute;
-            top: 25px;
+            top: 20px;
             right: 25px;
             z-index: 100;
         }
 
         .fullscreen-btn {
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.9);
             color: #4a4a4a;
-            border: 1px solid #ddd;
+            border: 2px solid #cbd5e0;
             padding: 8px 16px;
-            font-size: 0.95rem;
+            font-size: 1rem;
             font-weight: bold;
             border-radius: 20px;
             cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             transition: all 0.2s ease;
         }
 
@@ -57,29 +57,29 @@
             transform: scale(1.05);
         }
 
-        /* Main Window Window */
+        /* Slide Window Display Box */
         .slide-window {
             flex-grow: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 24px;
-            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.04);
-            transition: background-color 0.4s ease;
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
             height: calc(100vh - 100px);
+            overflow: hidden;
         }
 
-        /* Slide Setup */
+        /* Slides Config */
         .slide {
             display: none;
             width: 100%;
             height: 100%;
-            padding: 40px;
+            padding: 30px;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
-            animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: slideIn 0.3s ease-out;
         }
 
         .slide.active {
@@ -87,198 +87,172 @@
         }
 
         @keyframes slideIn {
-            from { opacity: 0; transform: scale(0.98); }
+            from { opacity: 0; transform: scale(0.97); }
             to { opacity: 1; transform: scale(1); }
         }
 
-        /* Custom Macaroon/Pastel Palettes per Slide */
-        .slide-p1 { background-color: #fff0f3; } /* Sweet Pink */
-        .slide-p2 { background-color: #e8f0fe; } /* Soft Blue */
-        .slide-p3 { background-color: #f3e5f5; } /* Lavender Purple */
-        .slide-p4 { background-color: #e8f5e9; } /* Mint Green */
-        .slide-p5 { background-color: #fffde7; } /* Chiffon Yellow */
+        /* Macaroon Pastel Themes */
+        .slide-pink { background-color: #ffe5ec; } 
+        .slide-blue { background-color: #e8f0fe; } 
+        .slide-purple { background-color: #f3e5f5; } 
+        .slide-green { background-color: #e8f5e9; } 
+        .slide-yellow { background-color: #fffde7; } 
 
-        /* Presentation Typography */
+        /* Titles & Translations Layout */
         h1 {
-            font-size: 3.8rem;
-            color: #3d3d3d;
+            font-size: 3.6rem;
+            color: #ff4d6d;
+            text-shadow: 2px 2px #fff;
             margin-bottom: 5px;
         }
         
         h2 {
             font-size: 2.8rem;
-            color: #3d3d3d;
-            margin-bottom: 5px;
+            color: #2b6cb0;
+            margin-bottom: 2px;
         }
 
         .translation-sub {
-            font-size: 1.6rem;
-            color: #6e6e6e;
+            font-size: 1.5rem;
+            color: #64748b;
             font-weight: normal;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             display: block;
         }
 
         p.intro-text {
             font-size: 1.8rem;
-            color: #555;
-            max-width: 850px;
+            color: #475569;
+            max-width: 800px;
             line-height: 1.6;
         }
 
-        /* Slide Layout Splits */
+        /* Split Columns for Examples */
         .split-grid {
             display: flex;
             gap: 25px;
             width: 100%;
-            max-width: 1050px;
+            max-width: 1000px;
             justify-content: center;
-            margin-top: 10px;
+            margin-top: 5px;
         }
 
         .split-card {
-            background: rgba(255, 255, 255, 0.92);
-            padding: 25px;
-            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 24px;
             flex: 1;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.01);
-            border: 1px solid rgba(255,255,255,0.6);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.02);
+            border: 3px solid #fff;
         }
 
         .split-card h3 {
             font-size: 2.2rem;
             margin-bottom: 15px;
-            padding-bottom: 8px;
-            border-bottom: 2px dashed #ddd;
+            padding-bottom: 5px;
+            border-bottom: 3px dashed #e2e8f0;
         }
 
-        .present-header { color: #2b6cb0; }
-        .past-header { color: #c53030; }
+        .present-header { color: #3182ce; }
+        .past-header { color: #e53e3e; }
 
         .example-row {
-            margin-bottom: 18px;
+            margin-bottom: 15px;
             text-align: left;
-            padding-left: 15px;
+            background: #f8fafc;
+            padding: 10px 15px;
+            border-radius: 12px;
+            border-left: 5px solid #cbd5e1;
         }
 
         .english-sentence {
-            font-size: 1.55rem;
+            font-size: 1.5rem;
             font-weight: bold;
-            color: #2d3748;
+            color: #1e293b;
         }
 
         .chinese-sentence {
-            font-size: 1.15rem;
-            color: #718096;
-            margin-top: 2px;
+            font-size: 1.1rem;
+            color: #64748b;
+            margin-top: 3px;
         }
 
-        .verb {
-            padding: 2px 6px;
-            border-radius: 6px;
-        }
-        .verb-pres { background-color: #bee3f8; color: #2b6cb0; }
-        .verb-past { background-color: #fed7d7; color: #c53030; }
+        .verb-pres { background-color: #bee3f8; color: #2b6cb0; padding: 2px 6px; border-radius: 6px; }
+        .verb-past { background-color: #fed7d7; color: #c53030; padding: 2px 6px; border-radius: 6px; }
 
-        .clue-tag {
-            font-size: 0.95rem;
-            background: #edf2f7;
-            padding: 3px 8px;
-            border-radius: 12px;
-            color: #4a5568;
-            font-weight: bold;
-            display: inline-block;
-            margin-left: 5px;
-        }
-
-        /* "Time Machine" Video Simulation Container */
-        .video-container {
+        /* Embedded Playable Video Player Design */
+        .video-wrapper {
             width: 100%;
-            max-width: 750px;
-            height: 340px;
-            background: #1a202c;
-            border-radius: 24px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: #fff;
-            position: relative;
-            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
-            border: 6px solid #e2e8f0;
+            max-width: 680px;
+            height: 380px;
+            border-radius: 20px;
             overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border: 6px solid white;
+            background: #000;
         }
 
-        .video-canvas {
-            font-size: 1.9rem;
-            font-weight: bold;
-            padding: 30px;
-            text-align: center;
-            line-height: 1.5;
-            flex-grow: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .video-ui-bar {
+        iframe {
             width: 100%;
-            background: #2d3748;
-            padding: 15px;
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            border-top: 2px solid #4a5568;
+            height: 100%;
+            border: none;
         }
 
-        .video-ui-bar button {
-            box-shadow: none;
-            padding: 10px 20px;
-            font-size: 1.05rem;
+        /* Large Emoji Vector Graphics */
+        .vector-graphic {
+            font-size: 5rem;
+            margin: 15px 0;
+            display: inline-block;
+            animation: bounce 2s infinite alternate;
         }
 
-        /* Footer Controls */
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-10px); }
+        }
+
+        /* Bottom Menu Footer Control */
         .footer-controls {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 10px 0 10px;
+            padding-top: 10px;
         }
 
         .nav-btn {
-            padding: 12px 30px;
-            font-size: 1.2rem;
+            padding: 10px 25px;
+            font-size: 1.1rem;
             font-weight: bold;
             border: none;
-            border-radius: 35px;
+            border-radius: 30px;
             cursor: pointer;
-            background-color: #4a90e2;
+            background-color: #ff7694;
             color: white;
-            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+            box-shadow: 0 4px 10px rgba(255, 118, 148, 0.3);
             transition: all 0.2s ease;
         }
 
         .nav-btn:hover {
-            background-color: #357abd;
+            background-color: #ff4d73;
             transform: translateY(-2px);
         }
 
         .nav-btn:disabled {
             background-color: #cbd5e0;
-            color: #a0aec0;
+            color: #94a3b8;
             box-shadow: none;
             cursor: not-allowed;
             transform: none;
         }
 
         .counter-badge {
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             font-weight: bold;
-            color: #4a5568;
-            background: rgba(255,255,255,0.8);
+            color: #475569;
+            background: rgba(255,255,255,0.9);
             padding: 6px 18px;
-            border-radius: 30px;
-            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            border: 2px solid #e2e8f0;
         }
     </style>
 </head>
@@ -290,92 +264,93 @@
             <button class="fullscreen-btn" onclick="toggleFullscreen()">🖥️ Fullscreen / 全螢幕</button>
         </div>
 
-        <!-- Slides Track -->
+        <!-- Slides Window Track -->
         <div class="slide-window" id="windowBlock">
             
-            <!-- Slide 1: Welcome -->
-            <div class="slide active slide-p1">
+            <!-- Slide 1: Welcome Page -->
+            <div class="slide active slide-pink">
+                <div class="vector-graphic">🚀⏰</div>
                 <h1>The Grammar Time Machine</h1>
                 <span class="translation-sub">文法時光機</span>
                 <p class="intro-text">
-                    Let's explore how our action words change when we travel between today and yesterday!
+                    Let's explore how our words change when we travel from today to yesterday!
                     <br>
-                    <span style="font-size: 1.4rem; color: #666; display:block; margin-top:15px;">讓我們一起探索當我們在今天與昨天之間穿梭時，動作單字會如何改變吧！</span>
+                    <span style="font-size: 1.4rem; color: #64748b; display:block; margin-top:10px;">讓我們一起探索當我們從今天穿梭到昨天時，動作會如何改變吧！</span>
                 </p>
             </div>
 
-            <!-- Slide 2: Rules -->
-            <div class="slide slide-p2">
+            <!-- Slide 2: Rules Core Concept -->
+            <div class="slide slide-blue">
+                <div class="vector-graphic" style="font-size: 4rem;">☀️ ➔ 🌙</div>
                 <h2>Present vs. Past</h2>
                 <span class="translation-sub">現在式與過去式</span>
                 <div class="split-grid">
-                    <div class="split-card">
+                    <div class="split-card" style="border-top: 6px solid #3182ce;">
                         <h3 class="present-header">Present (現在式)</h3>
-                        <div class="example-row" style="text-align: center; padding: 0;">
-                            <p class="english-sentence">Happening <span class="verb verb-pres">NOW</span> or every day.</p>
-                            <p class="chinese-sentence">正在發生，或每天固定做的事。</p>
-                            <p style="margin-top: 20px; font-size:1.3rem;">🔑 Clue Words: <span class="clue-tag">Today</span> <span class="clue-tag">Now</span></p>
+                        <div class="example-row" style="text-align: center; border: none; background: transparent;">
+                            <p class="english-sentence">Happening <span class="verb-pres">NOW</span> or every day.</p>
+                            <p class="chinese-sentence">正在發生，或每天固定做的事情。</p>
+                            <p style="margin-top: 25px; font-size:1.3rem; font-weight:bold; color:#4a5568;">
+                                🔑 Clues: "Today" / "Now"
+                            </p>
                         </div>
                     </div>
-                    <div class="split-card">
+                    <div class="split-card" style="border-top: 6px solid #e53e3e;">
                         <h3 class="past-header">Past (過去式)</h3>
-                        <div class="example-row" style="text-align: center; padding: 0;">
-                            <p class="english-sentence">Already <span class="verb verb-past">FINISHED</span> and done.</p>
+                        <div class="example-row" style="text-align: center; border: none; background: transparent;">
+                            <p class="english-sentence">Already <span class="verb-past">FINISHED</span> and done.</p>
                             <p class="chinese-sentence">已經結束、做完的事情。</p>
-                            <p style="margin-top: 20px; font-size:1.3rem;">🔑 Clue Words: <span class="clue-tag">Yesterday</span> <span class="clue-tag">Before</span></p>
+                            <p style="margin-top: 25px; font-size:1.3rem; font-weight:bold; color:#4a5568;">
+                                🔑 Clues: "Yesterday" / "Before"
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Slide 3: Time Machine Video Segment -->
-            <div class="slide slide-p3">
-                <h2>The Time Machine Video</h2>
-                <span class="translation-sub">時光機影片動畫演示</span>
-                <div class="video-container">
-                    <div class="video-canvas" id="screenDisplay">🎬 Click a button below to launch the Time Machine animation!</div>
-                    <div class="video-ui-bar">
-                        <button class="fullscreen-btn" onclick="triggerTimeVideo('present')">⚡ Present (現在)</button>
-                        <button class="fullscreen-btn" onclick="triggerTimeVideo('past')">⏰ Past (過去)</button>
-                    </div>
+            <!-- Slide 3: Embedded YouTube Video Player -->
+            <div class="slide slide-purple">
+                <h2>Playable Cartoon Lesson</h2>
+                <span class="translation-sub">點擊播放卡通影片教學</span>
+                <div class="video-wrapper">
+                    <!-- Embedded safe, child-friendly grammar video on past vs present verbs -->
+                    <iframe id="lessonVideo" src="https://www.youtube.com/embed/9wM4nne_6g8?rel=0" allowfullscreen></iframe>
                 </div>
             </div>
 
             <!-- Slide 4: Regular Verbs Examples -->
-            <div class="slide slide-p4">
+            <div class="slide slide-green">
+                <div class="vector-graphic" style="font-size: 3.5rem; animation-delay: 0.5s;">🚶‍♂️ 🦖</div>
                 <h2>Regular Verbs (+ed)</h2>
-                <span class="translation-sub">規則動詞變化（字尾加上 -ed）</span>
+                <span class="translation-sub">規則動詞變化（字尾直接加上 -ed）</span>
                 <div class="split-grid">
                     <div class="split-card">
-                        <h3 class="present-header">Today / 現在</h3>
-                        
+                        <h3 class="present-header">Today (現在)</h3>
                         <div class="example-row">
-                            <p class="english-sentence">I <span class="verb verb-pres">walk</span> to school.</p>
+                            <p class="english-sentence">I <span class="verb-pres">walk</span> to school.</p>
                             <p class="chinese-sentence">我走路去上學。</p>
                         </div>
                         <div class="example-row">
-                            <p class="english-sentence">They <span class="verb verb-pres">play</span> basketball.</p>
+                            <p class="english-sentence">They <span class="verb-pres">play</span> basketball.</p>
                             <p class="chinese-sentence">他們打籃球。</p>
                         </div>
                         <div class="example-row">
-                            <p class="english-sentence">We <span class="verb verb-pres">cook</span> breakfast.</p>
+                            <p class="english-sentence">We <span class="verb-pres">cook</span> breakfast.</p>
                             <p class="chinese-sentence">我們做早餐。</p>
                         </div>
                     </div>
-                    
                     <div class="split-card">
-                        <h3 class="past-header">Yesterday / 過去</h3>
-                        
+                        <h3 class="past-header">Yesterday (過去)</h3>
                         <div class="example-row">
-                            <p class="english-sentence">I <span class="verb verb-past">walked</span> to school.</p>
+                            <p class="english-sentence">I <span class="verb-past">walked</span> to school.</p>
                             <p class="chinese-sentence">我昨天走路去上學。</p>
                         </div>
                         <div class="example-row">
-                            <p class="english-sentence">They <span class="verb verb-past">played</span> basketball.</p>
+                            <p class="english-sentence">They <span class="verb-past">played</span> basketball.</p>
                             <p class="chinese-sentence">他們昨天打了籃球。</p>
                         </div>
                         <div class="example-row">
-                            <p class="english-sentence">We <span class="verb verb-past">cooked</span> breakfast.</p>
+                            <p class="english-sentence">We <span class="verb-past">cooked</span> breakfast.</p>
                             <p class="chinese-sentence">我們昨天做了早餐。</p>
                         </div>
                     </div>
@@ -383,40 +358,38 @@
             </div>
 
             <!-- Slide 5: Irregular Rebels Examples -->
-            <div class="slide slide-p5">
+            <div class="slide slide-yellow">
+                <div class="vector-graphic" style="font-size: 3.5rem; animation-delay: 1s;">🍎 🦅</div>
                 <h2>Irregular Rebels!</h2>
-                <span class="translation-sub">不規則變形動詞（形狀改變了！）</span>
+                <span class="translation-sub">不規則變形動詞（單字形狀完全改變！）</span>
                 <div class="split-grid">
                     <div class="split-card">
-                        <h3 class="present-header">Every day / 現在式</h3>
-                        
+                        <h3 class="present-header">Every day (現在式)</h3>
                         <div class="example-row">
-                            <p class="english-sentence">You <span class="verb verb-pres">eat</span> a sweet apple.</p>
-                            <p class="chinese-sentence">你吃一顆甜蘋果。</p>
+                            <p class="english-sentence">You <span class="verb-pres">eat</span> an apple.</p>
+                            <p class="chinese-sentence">你吃一顆蘋果。</p>
                         </div>
                         <div class="example-row">
-                            <p class="english-sentence">Birds <span class="verb verb-pres">fly</span> in the sky.</p>
-                            <p class="chinese-sentence">鳥兒在天空中飛翔。</p>
+                            <p class="english-sentence">Birds <span class="verb-pres">fly</span> in the sky.</p>
+                            <p class="chinese-sentence">鳥兒在天空中飛。</p>
                         </div>
                         <div class="example-row">
-                            <p class="english-sentence">He <span class="verb verb-pres">runs</span> to the park.</p>
+                            <p class="english-sentence">He <span class="verb-pres">runs</span> to the park.</p>
                             <p class="chinese-sentence">他跑步去公園。</p>
                         </div>
                     </div>
-                    
                     <div class="split-card">
-                        <h3 class="past-header">Last week / 過去式</h3>
-                        
+                        <h3 class="past-header">Last week (過去式)</h3>
                         <div class="example-row">
-                            <p class="english-sentence">You <span class="verb verb-past">ate</span> a sweet apple.</p>
-                            <p class="chinese-sentence">你上週吃了一顆甜蘋果。</p>
+                            <p class="english-sentence">You <span class="verb-past">ate</span> an apple.</p>
+                            <p class="chinese-sentence">你上週吃了一顆蘋果。</p>
                         </div>
                         <div class="example-row">
-                            <p class="english-sentence">Birds <span class="verb verb-past">flew</span> in the sky.</p>
-                            <p class="chinese-sentence">鳥兒之前在天空中飛翔。</p>
+                            <p class="english-sentence">Birds <span class="verb-past">flew</span> in the sky.</p>
+                            <p class="chinese-sentence">鳥兒之前在天空中飛。</p>
                         </div>
                         <div class="example-row">
-                            <p class="english-sentence">He <span class="verb verb-past">ran</span> to the park.</p>
+                            <p class="english-sentence">He <span class="verb-past">ran</span> to the park.</p>
                             <p class="chinese-sentence">他昨天跑步去公園。</p>
                         </div>
                     </div>
@@ -425,46 +398,47 @@
 
         </div>
 
-        <!-- Footer Control Menu -->
+        <!-- Bottom Controls Footer Menu -->
         <div class="footer-controls">
             <button id="prevBtn" class="nav-btn" onclick="navigateSlide(-1)">◀ Previous / 上一頁</button>
-            <div class="counter-badge" id="slideIndexText">Slide 1 / 5</div>
+            <div class="counter-badge" id="slideIndicator">Slide 1 / 5</div>
             <button id="nextBtn" class="nav-btn" onclick="navigateSlide(1)">Next / 下一頁 ▶</button>
         </div>
 
     </div>
 
     <script>
-        let slidePosition = 0;
+        let slideIndex = 0;
         const totalSlides = document.querySelectorAll('.slide');
-        const indexIndicator = document.getElementById('slideIndexText');
-        const screenDisplay = document.getElementById('screenDisplay');
+        const indicatorText = document.getElementById('slideIndicator');
+        const videoElement = document.getElementById('lessonVideo');
+        const originalVideoSrc = videoElement.src;
 
-        function updateSlideWindow() {
+        function renderSlideLayout() {
             totalSlides.forEach((slide, idx) => {
-                if(idx === slidePosition) {
+                if(idx === slideIndex) {
                     slide.classList.add('active');
                 } else {
                     slide.classList.remove('active');
                 }
             });
             
-            indexIndicator.innerText = `Slide ${slidePosition + 1} / ${totalSlides.length}`;
+            indicatorText.innerText = `Slide ${slideIndex + 1} / ${totalSlides.length}`;
             
-            document.getElementById('prevBtn').disabled = slidePosition === 0;
-            document.getElementById('nextBtn').disabled = slidePosition === totalSlides.length - 1;
+            document.getElementById('prevBtn').disabled = slideIndex === 0;
+            document.getElementById('nextBtn').disabled = slideIndex === totalSlides.length - 1;
         }
 
         function navigateSlide(offset) {
-            let nextPos = slidePosition + offset;
-            if(nextPos >= 0 && nextPos < totalSlides.length) {
-                slidePosition = nextPos;
-                updateSlideWindow();
+            let nextIndex = slideIndex + offset;
+            if(nextIndex >= 0 && nextIndex < totalSlides.length) {
+                slideIndex = nextIndex;
+                renderSlideLayout();
                 
-                // Clear video screen state if changing slide
-                if(slidePosition !== 2) {
-                    screenDisplay.innerHTML = "🎬 Click a button below to launch the Time Machine animation!";
-                    screenDisplay.style.color = "white";
+                // Pause YouTube video automatically when clicking away from Slide 3
+                if (slideIndex !== 2) {
+                    videoElement.src = "";
+                    videoElement.src = originalVideoSrc;
                 }
             }
         }
@@ -472,32 +446,21 @@
         function toggleFullscreen() {
             if (!document.fullscreenElement) {
                 document.documentElement.requestFullscreen().catch(err => {
-                    alert(`Could not activate fullscreen mode: ${err.message}`);
+                    alert(`Error running fullscreen mode: ${err.message}`);
                 });
             } else {
                 document.exitFullscreen();
             }
         }
 
-        // Time Machine Simulated Video Graphics
-        function triggerTimeVideo(mode) {
-            if(mode === 'present') {
-                screenDisplay.style.color = "#63b3ed";
-                screenDisplay.innerHTML = "🌀 TRAVELING TO PRESENT...<br><br>🌟 PRESENT TIMELINE active 🌟<br>『 Right now, I <span class='verb verb-pres'>JUMP</span> on the trampoline! 』";
-            } else if(mode === 'past') {
-                screenDisplay.style.color = "#fc8181";
-                screenDisplay.innerHTML = "⏳ REWINDING THE GEARS...<br><br>🍂 PAST TIMELINE active 🍂<br>『 Yesterday, I <span class='verb verb-past'>JUMPED</span> into the big splash! 』";
-            }
-        }
-
-        // Keyboard navigation shortcuts
+        // Add easy Keyboard arrow shortcuts
         document.addEventListener('keydown', (event) => {
             if (event.key === 'ArrowRight') navigateSlide(1);
             if (event.key === 'ArrowLeft') navigateSlide(-1);
         });
 
-        // Run Initial Load
-        updateSlideWindow();
+        // Load baseline layout
+        renderSlideLayout();
     </script>
 </body>
 </html>
